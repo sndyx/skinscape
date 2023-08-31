@@ -112,7 +112,7 @@ export function createModel(type: string, texture: THREE.DataTexture): THREE.Obj
     return group;
 }
 
-export class GridFace extends THREE.LineSegments {
+class GridFace extends THREE.LineSegments {
 
     constructor(width: number, height: number) {
         super();

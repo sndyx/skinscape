@@ -1,5 +1,6 @@
-import { writable } from 'svelte/store'
+import { writable } from 'svelte/store';
 
-const theme = writable('light')
-
-export { theme }
+export const preferences = writable({
+  theme: 'light',
+  gridlines: true
+});
