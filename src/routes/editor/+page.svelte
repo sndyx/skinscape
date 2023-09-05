@@ -1,14 +1,15 @@
-<script>
+<script lang="ts">
     import Editor from "$lib/Editor.svelte";
+    import type { RgbaColor } from "colord";
     import { onMount } from "svelte";
     import * as THREE from 'three';
 
-    let canvas;
-    let element;
+    let canvas: HTMLCanvasElement;
+    let element: HTMLDivElement;
 
-    let rgba = { r: 0, g: 0, b: 0, a: 1 };
-    let renderer;
-    let editors = [];
+    let rgba: RgbaColor = { r: 0, g: 0, b: 0, a: 1 };
+    let renderer: THREE.WebGLRenderer;
+    let editors: Editor[] = [];
 
     function addEditor() {
         let isFirst = editors.length === 0;

@@ -1,8 +1,9 @@
-<script>
+<script lang="ts">
     import Color from "./Color.svelte";
+    import type { RgbaColor } from "colord";
 
-    export let rgba;
-    export let palette;
+    export let rgba: RgbaColor;
+    export let palette: RgbaColor[];
 </script>
 
 <div class="palette">

@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import { preferences } from '$lib/stores'
     import { get } from 'svelte/store';
 
