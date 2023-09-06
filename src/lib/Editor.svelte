@@ -1,23 +1,22 @@
-<script lang="ts">
+<script>
     import ColorPicker from "./color/ColorPicker.svelte";
-    import type { RgbaColor } from "colord";
     import Palette from "./color/Palette.svelte";
     import EditorScene from "./EditorScene.svelte";
 
-    export let renderer: THREE.WebGLRenderer;
+    export let renderer;
 
-    export let rgba: RgbaColor;
-    export let palette: RgbaColor[] = [];
-    export let isFirst: boolean = false;
+    export let rgba;
+    export let palette = [];
+    export let isFirst = false;
 
-    let element: HTMLDivElement;
-    let scene: EditorScene;
+    let element;
+    let scene;
 
     export function render() {
         scene.render();
     }
 
-    let paletteWidth: number = 0;
+    let paletteWidth = 0;
     $: if (element !== undefined) {
         if (isFirst) paletteWidth = 145;
         else paletteWidth = 32 * Math.max(Math.min(Math.ceil(palette.length / Math.floor((element.clientHeight - 32) / 37)), 5), 2);

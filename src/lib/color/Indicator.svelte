@@ -1,5 +1,5 @@
-<script lang="ts">
-    export let pos: { x: number; y: number };
+<script>
+    export let pos;
 </script>
 
 <div

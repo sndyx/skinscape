@@ -1,15 +1,15 @@
-<script lang="ts">
+<script>
     import ColorButton from "./ColorButton.svelte";
     import Slider from "./Slider.svelte";
     import Picker from "./Picker.svelte";
     import Alpha from "./Alpha.svelte";
-    import { colord, type HsvaColor, type RgbaColor } from "colord";
+    import { colord } from "colord";
 
-	export let rgba: RgbaColor = { r: 255, g: 0, b: 0, a: 1 };
-	export let hsva: HsvaColor = { h: 0, s: 100, v: 100, a: 1 };
+	export let rgba = { r: 255, g: 0, b: 0, a: 1 };
+	export let hsva = { h: 0, s: 100, v: 100, a: 1 };
 
-	let _rgba: RgbaColor = { r: 255, g: 0, b: 0, a: 1 };
-	let _hsva: HsvaColor = { h: 0, s: 100, v: 100, a: 1 };
+	let _rgba = { r: 255, g: 0, b: 0, a: 1 };
+	let _hsva = { h: 0, s: 100, v: 100, a: 1 };
 
     function sync() {
         if (hsva.h !== _hsva.h || hsva.s !== _hsva.s || hsva.v !== _hsva.v || hsva.a !== _hsva.a) {
