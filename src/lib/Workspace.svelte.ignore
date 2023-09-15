@@ -1,0 +1,46 @@
+<script lang="ts">
+    import * as THREE from 'three';
+    import type { HsvaColor } from 'colord';
+    import Editor from './Editor.svelte.ignore';
+    import { onMount } from 'svelte';
+
+    let renderer: THREE.WebGLRenderer;
+
+    let canvas: HTMLCanvasElement;
+    let workspace: HTMLDivElement;
+
+    let primary: HsvaColor = { h: 0, s: 0, v: 0, a: 1 };
+    let secondary: HsvaColor = { h: 0, s: 0, v: 0, a: 1 };
+
+    function addEditor() {
+        
+    }
+
+    onMount(() => {
+        renderer = new THREE.WebGLRenderer();
+    })
+
+    addEditor();
+</script>
+
+<canvas bind:this={canvas}/>
+<div bind:this={workspace}>
+    <Editor bind:primary bind:secondary hasPicker={false} renderer={renderer} />
+</div>
+
+<style>
+    canvas {
+        pointer-events: none;
+        position: absolute;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        background: rgba(0.0, 0.0, 0.0, 0.0)
+    }
+
+    div {
+        width: 100%;
+        height: 100%;
+    }
+</style>
