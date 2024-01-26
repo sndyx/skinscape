@@ -52,6 +52,7 @@
     onMount(() => {
         renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
 		renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
         addEditor();
         addEditor();
         render();

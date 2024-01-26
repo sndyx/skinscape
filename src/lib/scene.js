@@ -28,15 +28,14 @@ export class Scene {
         this.texture = new THREE.DataTexture(this.data, 64, 64);
         this.texture.flipY = true;
 
-        this.camera.add(new THREE.DirectionalLight(0xFFFFFF, 1.5));
-        this.scene.add(new THREE.AmbientLight(0xFFFFFF, 0.3));
+        this.camera.add(new THREE.DirectionalLight(0xFFFFFF, 2));
+        this.scene.add(new THREE.AmbientLight(0xFFFFFF, 1));
         this.scene.add(this.camera);
         this.scene.add(this.objects);
 
         this.clock = new THREE.Clock();
-
-
-        this.renderer
+        this.raycaster = new THREE.Raycaster();
+        this.tool = new Pencil();
     }
 
     render() {
@@ -58,25 +57,21 @@ export class Scene {
         this.renderer.render(this.scene, this.camera);
     }
 
-    model(name) {
+    setModel(name) {
         this.objects.clear();
-        let models = createModel(name, this.texture);
+        const models = createModel(name, this.texture);
         models.forEach((it) => { this.objects.add(it) });
     }
 
-    skin(data) {
-        
-        //for (let i = 0; i < data.length; i += 4) {
-            
-        //}
+    setTexture(data) {
         this.data.set(data);
         this.texture.needsUpdate = true;
     }
 
     getPixel(uv) {
-        let x = Math.floor(uv.x * 64);
-        let y = Math.floor((1 - uv.y) * 64);
-        let pos = (x * 4) + (y * 64 * 4);
+        const x = Math.floor(uv.x * 64);
+        const y = Math.floor((1 - uv.y) * 64);
+        const pos = (x * 4) + (y * 64 * 4);
         return {
             r: this.data[pos], g: this.data[pos + 1],
             b: this.data[pos + 2], a: this.data[pos + 3]
@@ -84,11 +79,10 @@ export class Scene {
     }
 
     setPixel(uv, color) {
-        let x = Math.floor(uv.x * 64);
-        let y = Math.floor((1 - uv.y) * 64);
-        let pos = (x * 4) + ((y * 64 - 1) * 4);
+        const x = Math.floor(uv.x * 64);
+        const y = Math.floor((1 - uv.y) * 64);
+        const pos = (x * 4) + ((y * 64 - 1) * 4);
         this.data.set([color.r, color.g, color.b, Math.floor(color.a * 255)], pos);
-
         this.texture.needsUpdate = true;
     }
 

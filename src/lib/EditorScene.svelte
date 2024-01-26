@@ -9,32 +9,33 @@
 
     let element;
     let scene;
+    let mouseDown = false;
 
     function init() {
         scene = new Scene(renderer, element);
-        scene.model('alex');
-        setSkin('Incompleteusern');
+        scene.setModel('alex');
+        setSkin('pigleet');
     }
 
     async function setSkin(name) {
         let buffer = await (await fetch(`/api/skin/${name}`)).arrayBuffer();
-        scene.skin(new Uint8Array(UPNG.toRGBA8(UPNG.decode(buffer))[0]));
+        scene.setTexture(new Uint8Array(UPNG.toRGBA8(UPNG.decode(buffer))[0]));
     }
 
     export function render() {
         scene.render();
     }
 
-    function mousedown() {
+    function mousedown(event) {
+        // if ()
+    }
+
+    function mousemove(event) {
 
     }
 
-    function mousemove() {
-
-    }
-
-    function mouseup() {
-
+    function mouseup(event) {
+        if (event.button === 1) mouseDown = false;
     }
 
     onMount(init);
@@ -42,11 +43,11 @@
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
-        bind:this={element}
-        on:mousedown={mousedown}
-        on:mousemove={mousemove}
-        on:mouseup={mouseup}
-></div>
+    bind:this={element}
+    on:mousedown={mousedown}
+    on:mousemove={mousemove}
+    on:mouseup={mouseup}
+/>
 
 <style>
     div {
@@ -55,3 +56,4 @@
         height: 100%;
     }
 </style>
+
