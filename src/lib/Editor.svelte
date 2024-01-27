@@ -72,6 +72,7 @@
 
     .picker {
         width: 145px;
+        min-height: 120px;
         margin-top: 12px;
         flex: 1;
     }
@@ -85,5 +86,9 @@
         box-shadow: 2px 0 0 0 #000, -2px 0 0 0 #000, 0 2px 0 0 #000, 0 -2px 0 0 #000,
         0 0 0 2px var(--highlight-light), 4px 0 0 0 var(--highlight-light), -4px 0 0 0 var(--highlight-light), 0 4px 0 0 var(--highlight-light), 0 -4px 0 0 var(--highlight-dark),
         0 0 0 4px #000, -4px 0 0 2px #000, 4px 0 0 2px #000, 0 4px 0 2px #000, 0 -4px 0 2px #000;
+    }
+
+    @media screen and (max-height: 1024px) {
+
     }
 </style>

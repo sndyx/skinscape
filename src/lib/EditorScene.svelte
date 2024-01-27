@@ -14,7 +14,7 @@
     function init() {
         scene = new Scene(renderer, element);
         scene.setModel('alex');
-        setSkin('pigleet');
+        setSkin('sourgummmybears');
     }
 
     async function setSkin(name) {
@@ -27,19 +27,39 @@
     }
 
     function mousedown(event) {
-        // if ()
+        if (event.button === 0) {
+            scene.raycaster.setFromCamera(scene.pointer, scene.camera)
+            const intersects = scene.raycaster.intersectObjects(scene.scene.children, true);
+            if (intersects.length > 0) {
+                console.log(intersects[0].object.name);
+            }
+        }
     }
 
     function mousemove(event) {
-
+        let rect = element.getBoundingClientRect();
+        scene.updatePointer(
+            ((event.clientX - rect.left) / element.clientWidth) * 2 - 1,
+            -((event.clientY - rect.top) / element.clientHeight) * 2 + 1
+        );
     }
 
     function mouseup(event) {
         if (event.button === 1) mouseDown = false;
     }
 
+    function keydown(event) {
+        if (event.key === 'g') {
+            scene.toggleGridlines(!scene.gridlines);
+        } else if (event.key === 'o') {
+            scene.toggleOverlay(!scene.overlay);
+        }
+    }
+
     onMount(init);
 </script>
+
+<svelte:window on:keydown={keydown} />
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div

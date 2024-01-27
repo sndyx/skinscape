@@ -16,6 +16,8 @@ const DESCRIPTORS = {
     'alex': alex64
 };
 
+let layerIdx = 1;
+
 export function createModel(type, texture) {
     let descriptor = DESCRIPTORS[type];
     const properties = Object.getOwnPropertyNames(descriptor.model)
@@ -38,10 +40,10 @@ export function createModel(type, texture) {
             for (let j = 0; j < 6; j++) {
                 let face = DIRECTIONS[j];
                 let uv = type === 1 ? mapping.base[face] : mapping.overlay[face];
-                let ud = part[DIRECTION_MAP[face][0]];
-                let vd = -part[DIRECTION_MAP[face][1]];
+                let ud = part[DIRECTION_MAP[face][0]] - 0.05;
+                let vd = -part[DIRECTION_MAP[face][1]] + 0.05;
                 uv[1] = 64 - uv[1];
-                let offsets = [0, 0, ud, 0, 0, vd, ud, vd];
+                let offsets = [0.05, -0.05, ud, -0.05, 0.05, vd, ud, vd];
                 if (face === 'bottom') offsets.unshift(...offsets.splice(4));
                 for (let i = 0; i < 8; i++) buffer.array[j * 8 + i] = (uv[i % 2] + offsets[i]) / 64;
             }
@@ -54,8 +56,12 @@ export function createModel(type, texture) {
 
         const mesh = new THREE.Mesh(geometry, material);
         const overlayMesh = new THREE.Mesh(overlayGeometry, overlayMaterial);
-        const outline = new GridBox(part['width'], part['height'], part['depth']);
-        const overlayOutline = new GridBox(part['width'], part['height'], part['depth']);
+        const outline = new GridBox(part['width'], part['height'], part['depth'], 2);
+        const overlayOutline = new GridBox(part['width'], part['height'], part['depth'], 3);
+
+        overlayMesh.layers.set(1);
+        outline.layers.set(2);
+
 
         let name = properties[i];
 
@@ -66,14 +72,13 @@ export function createModel(type, texture) {
 
         overlayMesh.scale.set(1.1, 1.1, 1.1);
         overlayOutline.scale.set(1.1, 1.1, 1.1);
-        // overlayMesh.rotateX(0.01)
 
         overlayMesh.renderOrder = 1;
 
         group.push(mesh);
-        // group.push(outline);
+        group.push(outline);
         group.push(overlayMesh);
-        // group.push(overlayOutline);
+        group.push(overlayOutline);
 
         mesh.position.set(part.x, part.y, part.z);
         outline.position.set(part.x, part.y, part.z);
@@ -85,7 +90,7 @@ export function createModel(type, texture) {
 
 class GridFace extends THREE.LineSegments {
 
-    constructor(width, height) {
+    constructor(width, height, layer) {
         super();
         const gridGeometry = new THREE.BufferGeometry();
         const outlineGeometry = new THREE.BufferGeometry();
@@ -126,9 +131,8 @@ class GridFace extends THREE.LineSegments {
         outlineMaterial.transparent = true;
         const outlineLines = new THREE.LineSegments(outlineGeometry, outlineMaterial);
 
-        gridLines.layers.set(1);
-
-        outlineLines.layers.set(1);
+        gridLines.layers.set(layer);
+        outlineLines.layers.set(layer);
 
         this.add(gridLines);
         this.add(outlineLines);
@@ -141,7 +145,7 @@ class GridFace extends THREE.LineSegments {
         plane.position.z = -0.15;
         plane.renderOrder = -1;
 
-        plane.layers.set(1);
+        plane.layers.set(layer);
 
         this.add(plane);
     }
@@ -150,7 +154,7 @@ class GridFace extends THREE.LineSegments {
 
 export class GridBox extends THREE.Group {
 
-    constructor(width, height, depth) {
+    constructor(width, height, depth, layer) {
         super();
 
         let faces = [
@@ -163,7 +167,7 @@ export class GridBox extends THREE.Group {
         ]
 
         for (let face of faces) {
-            let grid = new GridFace(face.width, face.height);
+            let grid = new GridFace(face.width, face.height, layer);
             grid.position.copy(face.position);
             grid.rotation.copy(face.rotation);
             this.add(grid);

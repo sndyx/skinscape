@@ -14,7 +14,7 @@ export class Scene {
         this.scene = new THREE.Scene();
         this.objects = new THREE.Group();
 
-        this.camera = new THREE.PerspectiveCamera(70, 2, 0.1, 1000);
+        this.camera = new THREE.PerspectiveCamera(70, 2, 0.01, 1000);
         this.camera.position.add(CAMERA_POSITION);
         this.camera.layers.enable(1);
 
@@ -28,14 +28,18 @@ export class Scene {
         this.texture = new THREE.DataTexture(this.data, 64, 64);
         this.texture.flipY = true;
 
-        this.camera.add(new THREE.DirectionalLight(0xFFFFFF, 2));
+        this.camera.add(new THREE.DirectionalLight(0xFFFFFF, 1.7));
         this.scene.add(new THREE.AmbientLight(0xFFFFFF, 1));
         this.scene.add(this.camera);
         this.scene.add(this.objects);
 
         this.clock = new THREE.Clock();
         this.raycaster = new THREE.Raycaster();
-        this.tool = new Pencil();
+        this.pointer = new THREE.Vector2();
+
+        this.toggleGridlines(false);
+        this.toggleOverlay(false);
+        // this.tool = new Pencil();
     }
 
     render() {
@@ -55,6 +59,36 @@ export class Scene {
         this.camera.updateProjectionMatrix();
 
         this.renderer.render(this.scene, this.camera);
+    }
+
+    updatePointer(x, y) {
+        this.pointer.x = x;
+        this.pointer.y = y;
+    }
+
+    toggleOverlay(enabled) {
+        let gridlines = this.gridlines; // save gridlines toggle
+        this.toggleGridlines(false); // disable currently active gridlines
+        this.overlay = enabled;
+        if (enabled) {
+            this.camera.layers.enable(1);
+            this.raycaster.layers.enable(1);
+        } else {
+            this.camera.layers.disable(1);
+            this.raycaster.layers.disable(1);
+        }
+        this.toggleGridlines(gridlines); // push gridlines back to old state
+    }
+
+    toggleGridlines(enabled) {
+        this.gridlines = enabled;
+        let layer = 2;
+        if (this.overlay) {layer = 3; }
+        if (enabled) {
+            this.camera.layers.enable(layer);
+        } else {
+            this.camera.layers.disable(layer);
+        }
     }
 
     setModel(name) {
