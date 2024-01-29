@@ -1,7 +1,7 @@
 <script>
     import ColorPicker from "./color/ColorPicker.svelte";
     import Palette from "./color/Palette.svelte";
-    import EditorScene from "./EditorScene.svelte";
+    import { Scene } from "./scene.js";
 
     export let renderer;
 
@@ -10,17 +10,84 @@
     export let isFirst = false;
 
     let element;
-    let center;
+    let sceneElement;
+    let centerElement;
+
     let scene;
+
+    function init() {
+        scene = new Scene(renderer, element);
+        scene.setModel("alex");
+        setSkin("Incompleteusern");
+    }
+
+    onMount(init);
+
+    async function setSkin(name) {
+        let buffer = await (await fetch(`/api/skin/${name}`)).arrayBuffer();
+        scene.setTexture(new Uint8Array(UPNG.toRGBA8(UPNG.decode(buffer))[0]));
+    }
 
     export function render() {
         scene.render();
     }
 
     export function setWidth(width) {
-        // console.log(width);
-        center.setAttribute("style",`width:${width}px;`);
+        centerElement.setAttribute("style", `width:${width}px;`);
         // center.style.width = `${width}px;`;  This doesnt work!! haha :(
+    }
+
+    function mousedown(event) {
+        console.log("hi");
+        if (event.button === 0) {
+            scene.raycaster.setFromCamera(scene.pointer, scene.camera);
+            const intersects = scene.raycaster.intersectObjects(
+                scene.scene.children,
+                true,
+            );
+            if (intersects.length > 0) {
+                mouseDown = true;
+                scene.controls.enabled = false;
+                console.log(intersects[0].uv);
+                console.log(intersects[0]);
+                scene.setPixel(intersects[0].uv, rgba);
+            }
+        }
+    }
+
+    let mouseDown = false;
+
+    function mousemove(event) {
+        let rect = element.getBoundingClientRect();
+        scene.updatePointer(
+            ((event.clientX - rect.left) / element.clientWidth) * 2 - 1,
+            -((event.clientY - rect.top) / element.clientHeight) * 2 + 1,
+        );
+        if (mouseDown) {
+            scene.raycaster.setFromCamera(scene.pointer, scene.camera);
+            const intersects = scene.raycaster.intersectObjects(
+                scene.scene.children,
+                true,
+            );
+            if (intersects.length > 0) {
+                mouseDown = true;
+                scene.controls.enabled = false;
+                scene.setPixel(intersects[0].uv, rgba);
+            }
+        }
+    }
+
+    function mouseup(event) {
+        scene.controls.enabled = true;
+        if (event.button === 0) mouseDown = false;
+    }
+
+    function keydown(event) {
+        if (event.key === "g") {
+            scene.toggleGridlines(!scene.gridlines);
+        } else if (event.key === "o") {
+            scene.toggleOverlay(!scene.overlay);
+        }
     }
 
     let paletteWidth = 0;
@@ -31,12 +98,10 @@
     }
 </script>
 
-<div class="editor"
-     bind:this={element}
->
+<div class="editor" bind:this={element}>
     <div class="left-sidebar">
         <div class="palette" style="width: {paletteWidth}px;">
-            <Palette bind:rgba={rgba} bind:palette={palette} />
+            <Palette bind:rgba bind:palette />
         </div>
         {#if isFirst}
             <div class="picker">
@@ -44,11 +109,15 @@
             </div>
         {/if}
     </div>
-    <div class="center" bind:this={center}>
+    <div class="center" bind:this={centerElement}>
         <!-- svelte-ignore a11y-no-static-element-interactions -->
-        <div class="scene">
-            <EditorScene bind:this={scene} bind:renderer bind:rgba bind:palette />
-        </div>
+        <div
+            class="scene"
+            bind:this={sceneElement}
+            on:mousedown={mousedown}
+            on:mousemove={mousemove}
+            on:mouseup={mouseup}
+        ></div>
     </div>
 </div>
 
@@ -90,12 +159,23 @@
         height: calc(100% - 12px);
         margin: 6px;
         background: var(--canvas-color);
-        box-shadow: 2px 0 0 0 #000, -2px 0 0 0 #000, 0 2px 0 0 #000, 0 -2px 0 0 #000,
-        0 0 0 2px var(--highlight-light), 4px 0 0 0 var(--highlight-light), -4px 0 0 0 var(--highlight-light), 0 4px 0 0 var(--highlight-light), 0 -4px 0 0 var(--highlight-dark),
-        0 0 0 4px #000, -4px 0 0 2px #000, 4px 0 0 2px #000, 0 4px 0 2px #000, 0 -4px 0 2px #000;
+        box-shadow:
+            2px 0 0 0 #000,
+            -2px 0 0 0 #000,
+            0 2px 0 0 #000,
+            0 -2px 0 0 #000,
+            0 0 0 2px var(--highlight-light),
+            4px 0 0 0 var(--highlight-light),
+            -4px 0 0 0 var(--highlight-light),
+            0 4px 0 0 var(--highlight-light),
+            0 -4px 0 0 var(--highlight-dark),
+            0 0 0 4px #000,
+            -4px 0 0 2px #000,
+            4px 0 0 2px #000,
+            0 4px 0 2px #000,
+            0 -4px 0 2px #000;
     }
 
     @media screen and (max-height: 1024px) {
-
     }
 </style>

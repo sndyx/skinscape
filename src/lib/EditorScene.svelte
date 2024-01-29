@@ -1,5 +1,5 @@
 <script>
-    import { Scene } from './scene.js';
+    import { Scene } from "./scene.js";
     import { onMount } from "svelte";
     import UPNG from "upng-js";
 
@@ -13,11 +13,11 @@
 
     function init() {
         scene = new Scene(renderer, element);
-        scene.setModel('alex');
+        scene.setModel("alex");
         if (Math.random() > 0.5) {
-            setSkin('sourgummmybears');
+            setSkin("Incompleteusern");
         } else {
-            setSkin('sndy')
+            setSkin("Incompleteusern");
         }
     }
 
@@ -30,13 +30,14 @@
         scene.render();
     }
 
-    let drawing = false;
-
     function mousedown(event) {
-        console.log('hi');
+        console.log("hi");
         if (event.button === 0) {
-            scene.raycaster.setFromCamera(scene.pointer, scene.camera)
-            const intersects = scene.raycaster.intersectObjects(scene.scene.children, true);
+            scene.raycaster.setFromCamera(scene.pointer, scene.camera);
+            const intersects = scene.raycaster.intersectObjects(
+                scene.scene.children,
+                true,
+            );
             if (intersects.length > 0) {
                 mouseDown = true;
                 scene.controls.enabled = false;
@@ -51,11 +52,14 @@
         let rect = element.getBoundingClientRect();
         scene.updatePointer(
             ((event.clientX - rect.left) / element.clientWidth) * 2 - 1,
-            -((event.clientY - rect.top) / element.clientHeight) * 2 + 1
+            -((event.clientY - rect.top) / element.clientHeight) * 2 + 1,
         );
         if (mouseDown) {
-            scene.raycaster.setFromCamera(scene.pointer, scene.camera)
-            const intersects = scene.raycaster.intersectObjects(scene.scene.children, true);
+            scene.raycaster.setFromCamera(scene.pointer, scene.camera);
+            const intersects = scene.raycaster.intersectObjects(
+                scene.scene.children,
+                true,
+            );
             if (intersects.length > 0) {
                 mouseDown = true;
                 scene.controls.enabled = false;
@@ -70,9 +74,9 @@
     }
 
     function keydown(event) {
-        if (event.key === 'g') {
+        if (event.key === "g") {
             scene.toggleGridlines(!scene.gridlines);
-        } else if (event.key === 'o') {
+        } else if (event.key === "o") {
             scene.toggleOverlay(!scene.overlay);
         }
     }
@@ -87,8 +91,8 @@
     bind:this={element}
     on:mousedown={mousedown}
     on:mousemove={mousemove}
-    on:mouseup={mouseup}>
-</div>
+    on:mouseup={mouseup}
+></div>
 
 <style>
     div {
@@ -97,4 +101,3 @@
         height: 100%;
     }
 </style>
-
