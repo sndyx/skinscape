@@ -14,13 +14,14 @@ export class Scene {
         this.scene = new THREE.Scene();
         this.objects = new THREE.Group();
 
-        this.camera = new THREE.PerspectiveCamera(70, 2, 0.01, 1000);
+        this.camera = new THREE.PerspectiveCamera(70, 2, 1, 10000);
         this.camera.position.add(CAMERA_POSITION);
+        this.camera.lookAt(0, 10, 30);
         this.camera.layers.enable(1);
 
         this.controls = new OrbitControls(this.camera, element);
         this.controls.target.set(CONTROLS_TARGET.x, CONTROLS_TARGET.y, CONTROLS_TARGET.z);
-        this.controls.rotateSpeed = 3;
+        this.controls.rotateSpeed = 2;
         this.controls.maxDistance = 200;
         this.controls.minDistance = 10;
 
@@ -113,7 +114,7 @@ export class Scene {
     }
 
     setPixel(uv, color) {
-        const x = Math.floor(uv.x * 64);
+        const x = Math.ceil(uv.x * 64); // Why ceil? IDK LOL
         const y = Math.floor((1 - uv.y) * 64);
         const pos = (x * 4) + ((y * 64 - 1) * 4);
         this.data.set([color.r, color.g, color.b, Math.floor(color.a * 255)], pos);

@@ -1,4 +1,7 @@
 import * as THREE from 'three';
+import { LineSegments2 } from 'three/addons/lines/LineSegments2.js';
+import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
+import { LineSegmentsGeometry } from 'three/addons/lines/LineSegmentsGeometry.js';
 import steve64 from '../../models/steve64.json';
 import alex64 from '../../models/alex64.json';
 
@@ -15,8 +18,7 @@ const DESCRIPTORS = {
     'steve': steve64,
     'alex': alex64
 };
-
-let layerIdx = 1;
+const Y_OFFSET = 1.4; // Moves model to center of camera (moving camera instead centers model weirdly)
 
 export function createModel(type, texture) {
     let descriptor = DESCRIPTORS[type];
@@ -30,20 +32,20 @@ export function createModel(type, texture) {
         const overlayGeometry = new THREE.BoxGeometry(part['width'], part['height'], part['depth']);
 
         const material = new THREE.MeshLambertMaterial({ map: texture });
-        const overlayMaterial = new THREE.MeshLambertMaterial({ map: texture, side: THREE.DoubleSide });
+        const overlayMaterial = new THREE.MeshLambertMaterial({ map: texture, side: THREE.DoubleSide, depthWrite: false });
         material.transparent = true;
         overlayMaterial.transparent = true;
 
         // Properly map uvs (awful code)
         for (let type = 0; type < 2; type++) {
-            let buffer = new THREE.Float32BufferAttribute(48, 2);
+            const buffer = new THREE.Float32BufferAttribute(48, 2);
             for (let j = 0; j < 6; j++) {
-                let face = DIRECTIONS[j];
-                let uv = type === 1 ? mapping.base[face] : mapping.overlay[face];
-                let ud = part[DIRECTION_MAP[face][0]] - 0.05;
-                let vd = -part[DIRECTION_MAP[face][1]] + 0.05;
+                const face = DIRECTIONS[j];
+                const uv = (type === 1 ? mapping.base[face] : mapping.overlay[face]).slice();
+                const ud = part[DIRECTION_MAP[face][0]] - 0.05;
+                const vd = -part[DIRECTION_MAP[face][1]] + 0.05;
                 uv[1] = 64 - uv[1];
-                let offsets = [0.05, -0.05, ud, -0.05, 0.05, vd, ud, vd];
+                const offsets = [0.05, -0.05, ud, -0.05, 0.05, vd, ud, vd];
                 if (face === 'bottom') offsets.unshift(...offsets.splice(4));
                 for (let i = 0; i < 8; i++) buffer.array[j * 8 + i] = (uv[i % 2] + offsets[i]) / 64;
             }
@@ -80,10 +82,10 @@ export function createModel(type, texture) {
         group.push(overlayMesh);
         group.push(overlayOutline);
 
-        mesh.position.set(part.x, part.y, part.z);
-        outline.position.set(part.x, part.y, part.z);
-        overlayMesh.position.set(part.x, part.y, part.z);
-        overlayOutline.position.set(part.x, part.y, part.z);
+        mesh.position.set(part.x, part.y + Y_OFFSET, part.z);
+        outline.position.set(part.x, part.y + Y_OFFSET, part.z);
+        overlayMesh.position.set(part.x, part.y + Y_OFFSET, part.z);
+        overlayOutline.position.set(part.x, part.y + Y_OFFSET, part.z);
     }
     return group;
 }
@@ -92,14 +94,11 @@ class GridFace extends THREE.LineSegments {
 
     constructor(width, height, layer) {
         super();
-        const gridGeometry = new THREE.BufferGeometry();
-        const outlineGeometry = new THREE.BufferGeometry();
         const vertices = [];
         const outline = [];
   
         const halfWidth = width / 2;
         const halfHeight = height / 2;
-  
         for (let x = -halfWidth; x <= halfWidth; x++) {
             if (x === -halfWidth || x === halfWidth) {
                 outline.push(x, -halfHeight, 0);
@@ -119,17 +118,17 @@ class GridFace extends THREE.LineSegments {
                 vertices.push(halfWidth, y, 0);
             }
         }
-  
-        gridGeometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
-        outlineGeometry.setAttribute('position', new THREE.Float32BufferAttribute(outline, 3));
 
-        const gridMaterial = new THREE.LineBasicMaterial({ color: 0x555555 });
+        const gridLineGeometry = new LineSegmentsGeometry().setPositions(vertices);
+        const outlineLineGeometry = new LineSegmentsGeometry().setPositions(outline);
+
+        const gridMaterial = new LineMaterial({ color: 0x000000, linewidth: 0.0005 });
         gridMaterial.transparent = true;
-        const gridLines = new THREE.LineSegments(gridGeometry, gridMaterial);
+        const gridLines = new LineSegments2(gridLineGeometry, gridMaterial);
 
-        const outlineMaterial = new THREE.LineBasicMaterial({ color: 0xaaaaaa, linewidth: 2 });
+        const outlineMaterial = new LineMaterial({ color: 0xffffff, linewidth: 0.002 });
         outlineMaterial.transparent = true;
-        const outlineLines = new THREE.LineSegments(outlineGeometry, outlineMaterial);
+        const outlineLines = new LineSegments2(outlineLineGeometry, outlineMaterial);
 
         gridLines.layers.set(layer);
         outlineLines.layers.set(layer);

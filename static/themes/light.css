@@ -1,6 +1,8 @@
 :root {
     --main-color: #2a2a2b;
     --inlay-color: #101010;
+    --status-line: #545558;
+    --menu-bar: #101010;
     --canvas-color: #1C1C1C;
     --highlight-dark: #515152;
     --highlight-light: #8a8a8b;   

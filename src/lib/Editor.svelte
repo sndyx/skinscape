@@ -10,16 +10,24 @@
     export let isFirst = false;
 
     let element;
+    let center;
     let scene;
 
     export function render() {
         scene.render();
     }
 
+    export function setWidth(width) {
+        // console.log(width);
+        center.setAttribute("style",`width:${width}px;`);
+        // center.style.width = `${width}px;`;  This doesnt work!! haha :(
+    }
+
     let paletteWidth = 0;
     $: if (element !== undefined) {
         if (isFirst) paletteWidth = 145;
-        else paletteWidth = 32 * Math.max(Math.min(Math.ceil(palette.length / Math.floor((element.clientHeight - 32) / 37)), 5), 2);
+        // else paletteWidth = 32 * Math.max(Math.min(Math.ceil(palette.length / Math.floor((element.clientHeight - 32) / 37)), 5), 2);
+        else paletteWidth = 64;
     }
 </script>
 
@@ -36,7 +44,7 @@
             </div>
         {/if}
     </div>
-    <div class="center">
+    <div class="center" bind:this={center}>
         <!-- svelte-ignore a11y-no-static-element-interactions -->
         <div class="scene">
             <EditorScene bind:this={scene} bind:renderer bind:rgba bind:palette />
@@ -46,9 +54,9 @@
 
 <style>
     .editor {
+        height: 100%;
+        width: fit-content;
         display: flex;
-        flex-direction: row;
-        flex: 1;
     }
 
     .left-sidebar {
@@ -57,13 +65,12 @@
         flex-direction: column;
         height: calc(100% - 24px);
         padding: 12px;
-        background: var(--main-color);
     }
 
     .center {
-        flex: 1;
+        position: relative;
+        height: calc(100% - 24px);
         padding: 12px 0 12px 0;
-        background: var(--main-color);
     }
 
     .palette {

@@ -24,6 +24,7 @@
     }
 
     function updateSize() {
+        if (canvas === null) return;
         const width = canvas.clientWidth;
         const height = canvas.clientHeight;
 
@@ -32,8 +33,16 @@
         }
     }
 
+    function updateEditorSizes() {
+        const sceneWidth = (element.clientWidth - 169 - (88 * (editors.length - 1)) - 12) / editors.length;
+        for (let i = 0; i < editors.length; i++) {
+            editors[i].setWidth(sceneWidth);
+        }
+    }
+
     function render() {
         updateSize();
+        updateEditorSizes();
 
         renderer.setClearColor(0x000000, 0);
 		renderer.setScissorTest(false);
@@ -42,7 +51,7 @@
 		renderer.setClearColor(0xff0000, 0);
 		renderer.setScissorTest(true);
 
-        for(let i = 0; i < editors.length; i++) {
+        for (let i = 0; i < editors.length; i++) {
             editors[i].render();
         }
 
@@ -50,7 +59,7 @@
     }
 
     onMount(() => {
-        renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+        renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, logarithmicDepthBuffer: true });
 		renderer.setPixelRatio(window.devicePixelRatio);
         renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
         addEditor();
@@ -60,6 +69,9 @@
 </script>
 
 <canvas bind:this={canvas}></canvas>
+
+<div class="header"
+></div>
 
 <div 
     class="editors"
@@ -80,13 +92,24 @@
         background: rgba(0.0, 0.0, 0.0, 0.0)
     }
 
+    .header {
+        position: absolute;
+        top: 0;
+        height: 20px;
+        left: 0; right: 0;
+        background-color: var(--menu-bar);
+        border-bottom: 2px solid var(--highlight-dark);
+        pointer-events: none;
+    }
+
     .editors {
         position: absolute;
         left: 0; right: 0;
         top: 22px;
         bottom: 24px;
         display: flex;
-        flex-direction: row;
+        padding-right: 12px;
+        background-color: var(--main-color);
     }
 
     .status-bar {
@@ -94,7 +117,7 @@
         bottom: 0;
         height: 20px;
         left: 0; right: 0;
-        background-color: #545558;
+        background-color: var(--status-line);
         box-shadow: 0 -2px 0 0 var(--highlight-light), 0 -4px 0 0 #000;
     }
 </style>

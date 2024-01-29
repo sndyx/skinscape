@@ -14,7 +14,11 @@
     function init() {
         scene = new Scene(renderer, element);
         scene.setModel('alex');
-        setSkin('sourgummmybears');
+        if (Math.random() > 0.5) {
+            setSkin('sourgummmybears');
+        } else {
+            setSkin('sndy')
+        }
     }
 
     async function setSkin(name) {
@@ -26,12 +30,19 @@
         scene.render();
     }
 
+    let drawing = false;
+
     function mousedown(event) {
+        console.log('hi');
         if (event.button === 0) {
             scene.raycaster.setFromCamera(scene.pointer, scene.camera)
             const intersects = scene.raycaster.intersectObjects(scene.scene.children, true);
             if (intersects.length > 0) {
-                console.log(intersects[0].object.name);
+                mouseDown = true;
+                scene.controls.enabled = false;
+                console.log(intersects[0].uv);
+                console.log(intersects[0]);
+                scene.setPixel(intersects[0].uv, rgba);
             }
         }
     }
@@ -42,10 +53,20 @@
             ((event.clientX - rect.left) / element.clientWidth) * 2 - 1,
             -((event.clientY - rect.top) / element.clientHeight) * 2 + 1
         );
+        if (mouseDown) {
+            scene.raycaster.setFromCamera(scene.pointer, scene.camera)
+            const intersects = scene.raycaster.intersectObjects(scene.scene.children, true);
+            if (intersects.length > 0) {
+                mouseDown = true;
+                scene.controls.enabled = false;
+                scene.setPixel(intersects[0].uv, rgba);
+            }
+        }
     }
 
     function mouseup(event) {
-        if (event.button === 1) mouseDown = false;
+        scene.controls.enabled = true;
+        if (event.button === 0) mouseDown = false;
     }
 
     function keydown(event) {
@@ -66,8 +87,8 @@
     bind:this={element}
     on:mousedown={mousedown}
     on:mousemove={mousemove}
-    on:mouseup={mouseup}
-/>
+    on:mouseup={mouseup}>
+</div>
 
 <style>
     div {
