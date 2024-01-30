@@ -4,12 +4,19 @@
     let menu;
     let content;
 
+    let active = false;
+
     function click() {
-        let rect = menu.getBoundingClientRect();
-        content.setAttribute(
-            "style",
-            `display: block; top: 20px; left: ${rect.left}px;`,
-        );
+        if (!active) {
+            let rect = menu.getBoundingClientRect();
+            content.setAttribute(
+                "style",
+                `display: block; top: 20px; left: ${rect.left}px;`,
+            );
+        } else {
+            content.setAttribute("style", "display: none;");
+        }
+        active = !active;
     }
 
     function mousemove(event) {
@@ -29,6 +36,7 @@
             )
         ) {
             content.setAttribute("style", "display: none;");
+            active = false;
         }
     }
 </script>
@@ -64,5 +72,6 @@
         color: var(--text-color);
         margin: 0;
         padding: 0;
+        user-select: none;
     }
 </style>

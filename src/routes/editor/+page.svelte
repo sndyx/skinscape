@@ -25,7 +25,7 @@
         editors.push(editor);
     }
 
-    function updateSize() {
+    function resize() {
         if (canvas === null) return;
         const width = canvas.clientWidth;
         const height = canvas.clientHeight;
@@ -33,6 +33,7 @@
         if (canvas.width !== width || canvas.height !== height) {
             renderer.setSize(width, height, false);
         }
+        updateEditorSizes();
     }
 
     function updateEditorSizes() {
@@ -45,9 +46,6 @@
     }
 
     function render() {
-        updateSize();
-        updateEditorSizes();
-
         renderer.setClearColor(0x000000, 0);
         renderer.setScissorTest(false);
         renderer.clear();
@@ -72,9 +70,12 @@
         renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
         addEditor();
         addEditor();
+        resize();
         render();
     });
 </script>
+
+<svelte:window on:resize={resize} />
 
 <canvas bind:this={canvas}></canvas>
 

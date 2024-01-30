@@ -85,6 +85,7 @@
         padding: 0;
         font-family: 'Silkscreen', serif;
         font-size: 14px;
+        overflow: hidden;
         color: var(--inverted);
         height: 100%;
     }

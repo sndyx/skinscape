@@ -2,6 +2,9 @@
     import ColorPicker from "./color/ColorPicker.svelte";
     import Palette from "./color/Palette.svelte";
     import { Scene } from "./scene.js";
+    import { onMount } from "svelte";
+    import UPNG from "upng-js";
+    import PartToggle from "$lib/PartToggle.svelte";
 
     export let renderer;
 
@@ -15,10 +18,20 @@
 
     let scene;
 
+    let bodyToggles = {
+        head: true,
+        body: true,
+        leftArm: true,
+        leftLeg: true,
+        rightArm: true,
+        rightLeg: true,
+    };
+
     function init() {
-        scene = new Scene(renderer, element);
+        scene = new Scene(renderer, sceneElement);
         scene.setModel("alex");
         setSkin("Incompleteusern");
+        resize();
     }
 
     onMount(init);
@@ -38,7 +51,11 @@
     }
 
     function mousedown(event) {
-        console.log("hi");
+
+        // Mandatory for now, prevents bug related to selection getting scene OrbitControls stuck
+        // Seems more related to canvas than THREE.js as it has happened on the color picker as well
+        (window.getSelection ? window.getSelection() : document.selection).empty();
+
         if (event.button === 0) {
             scene.raycaster.setFromCamera(scene.pointer, scene.camera);
             const intersects = scene.raycaster.intersectObjects(
@@ -58,10 +75,10 @@
     let mouseDown = false;
 
     function mousemove(event) {
-        let rect = element.getBoundingClientRect();
+        let rect = sceneElement.getBoundingClientRect();
         scene.updatePointer(
-            ((event.clientX - rect.left) / element.clientWidth) * 2 - 1,
-            -((event.clientY - rect.top) / element.clientHeight) * 2 + 1,
+            ((event.clientX - rect.left) / sceneElement.clientWidth) * 2 - 1,
+            -((event.clientY - rect.top) / sceneElement.clientHeight) * 2 + 1,
         );
         if (mouseDown) {
             scene.raycaster.setFromCamera(scene.pointer, scene.camera);
@@ -91,12 +108,14 @@
     }
 
     let paletteWidth = 0;
-    $: if (element !== undefined) {
-        if (isFirst) paletteWidth = 145;
+    function resize() {
+        if (isFirst) paletteWidth = Math.min(145, window.innerWidth / 10);
         // else paletteWidth = 32 * Math.max(Math.min(Math.ceil(palette.length / Math.floor((element.clientHeight - 32) / 37)), 5), 2);
-        else paletteWidth = 64;
+        else paletteWidth = 34;
     }
 </script>
+
+<svelte:window on:keydown={keydown} on:resize={resize} />
 
 <div class="editor" bind:this={element}>
     <div class="left-sidebar">
@@ -104,7 +123,7 @@
             <Palette bind:rgba bind:palette />
         </div>
         {#if isFirst}
-            <div class="picker">
+            <div class="picker" style="width: {paletteWidth}px;">
                 <ColorPicker bind:rgba />
             </div>
         {/if}
@@ -117,7 +136,11 @@
             on:mousedown={mousedown}
             on:mousemove={mousemove}
             on:mouseup={mouseup}
-        ></div>
+        >
+            <div class="part-toggle">
+                <PartToggle bind:bodyToggles={bodyToggles} />
+            </div>
+        </div>
     </div>
 </div>
 
@@ -147,7 +170,6 @@
     }
 
     .picker {
-        width: 145px;
         min-height: 120px;
         margin-top: 12px;
         flex: 1;
@@ -174,6 +196,15 @@
             4px 0 0 2px #000,
             0 4px 0 2px #000,
             0 -4px 0 2px #000;
+    }
+
+    .part-toggle {
+        z-index: 5;
+        position: absolute;
+        width: 9vw;
+        height: 15vw;
+        right: 0;
+        bottom: 0;
     }
 
     @media screen and (max-height: 1024px) {
