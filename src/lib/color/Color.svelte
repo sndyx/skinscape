@@ -36,7 +36,7 @@
 
     div:before {
         content: "";
-        position: relative;
+        position: absolute;
 		inset: 0;
         background: var(--color);
     }

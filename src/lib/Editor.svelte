@@ -9,8 +9,9 @@
     export let renderer;
 
     export let rgba;
-    export let palette = [];
     export let isFirst = false;
+
+    let palette = Array();
 
     let element;
     let sceneElement;
@@ -30,7 +31,7 @@
     function init() {
         scene = new Scene(renderer, sceneElement);
         scene.setModel("alex");
-        setSkin("Incompleteusern");
+        // setSkin("Incompleteusern");
         resize();
     }
 
@@ -51,10 +52,12 @@
     }
 
     function mousedown(event) {
-
         // Mandatory for now, prevents bug related to selection getting scene OrbitControls stuck
         // Seems more related to canvas than THREE.js as it has happened on the color picker as well
-        (window.getSelection ? window.getSelection() : document.selection).empty();
+        (window.getSelection
+            ? window.getSelection()
+            : document.selection
+        ).empty();
 
         if (event.button === 0) {
             scene.raycaster.setFromCamera(scene.pointer, scene.camera);
@@ -65,8 +68,6 @@
             if (intersects.length > 0) {
                 mouseDown = true;
                 scene.controls.enabled = false;
-                console.log(intersects[0].uv);
-                console.log(intersects[0]);
                 scene.setPixel(intersects[0].uv, rgba);
             }
         }
@@ -90,6 +91,11 @@
                 mouseDown = true;
                 scene.controls.enabled = false;
                 scene.setPixel(intersects[0].uv, rgba);
+                if (palette.findIndex((value) => {
+                    Object.is(value, rgba)
+                }) === -1) {
+                    palette.push(Object.assign({}, rgba));
+                }
             }
         }
     }
@@ -109,7 +115,7 @@
 
     let paletteWidth = 0;
     function resize() {
-        if (isFirst) paletteWidth = Math.min(145, window.innerWidth / 10);
+        if (isFirst) paletteWidth = Math.min(120, window.innerWidth / 10);
         // else paletteWidth = 32 * Math.max(Math.min(Math.ceil(palette.length / Math.floor((element.clientHeight - 32) / 37)), 5), 2);
         else paletteWidth = 34;
     }
@@ -137,9 +143,11 @@
             on:mousemove={mousemove}
             on:mouseup={mouseup}
         >
+            <!---
             <div class="part-toggle">
-                <PartToggle bind:bodyToggles={bodyToggles} />
+                <PartToggle bind:bodyToggles />
             </div>
+            -->
         </div>
     </div>
 </div>
@@ -166,13 +174,12 @@
     }
 
     .palette {
-        flex: 3;
+        height: calc(75% - 6px);
     }
 
     .picker {
-        min-height: 120px;
+        height: calc(25% - 6px);
         margin-top: 12px;
-        flex: 1;
     }
 
     .scene {
