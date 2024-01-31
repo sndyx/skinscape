@@ -24,4 +24,12 @@
         overflow-y: scroll;
         box-shadow: 2px 0 0 0 #000, -2px 0 0 0 #000, 0 2px 0 0 #000, 0 -2px 0 0 #000, 0 0 0 2px var(--highlight-dark), 4px 0 0 0 var(--highlight-dark), -4px 0 0 0 var(--highlight-dark), 0 4px 0 0 var(--highlight-light), 0 -4px 0 0 var(--highlight-dark);
     }
+
+    .palette {
+        -ms-overflow-style: none;  /* Internet Explorer 10+ */
+        scrollbar-width: none;  /* Firefox */
+    }
+    .palette::-webkit-scrollbar {
+        display: none;  /* Safari and Chrome */
+    }
 </style>

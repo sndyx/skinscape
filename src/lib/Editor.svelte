@@ -11,7 +11,7 @@
     export let rgba;
     export let isFirst = false;
 
-    let palette = Array();
+    let palette = new Set();
 
     let element;
     let sceneElement;
@@ -91,10 +91,8 @@
                 mouseDown = true;
                 scene.controls.enabled = false;
                 scene.setPixel(intersects[0].uv, rgba);
-                if (palette.findIndex((value) => {
-                    Object.is(value, rgba)
-                }) === -1) {
-                    palette.push(Object.assign({}, rgba));
+                if (!palette.has(rgba)) {
+                    palette.add(rgba);
                 }
             }
         }
@@ -174,12 +172,13 @@
     }
 
     .palette {
-        height: calc(75% - 6px);
+        height: 100%;
     }
 
     .picker {
-        height: calc(25% - 6px);
+        height: calc(30% - 6px);
         margin-top: 12px;
+        bottom: 0;
     }
 
     .scene {

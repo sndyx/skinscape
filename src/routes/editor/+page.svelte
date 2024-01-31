@@ -4,6 +4,7 @@
     import * as THREE from "three";
     import FileMenu from "$lib/FileMenu.svelte";
     import EditMenu from "$lib/EditMenu.svelte";
+    import Menu from "$lib/Menu.svelte";
 
     let canvas;
     let element;
@@ -47,7 +48,6 @@
     }
 
     function render() {
-        resize(); // Why do I have to do this? Why?
         renderer.setClearColor(0x000000, 0);
         renderer.setScissorTest(false);
         renderer.clear();
@@ -84,6 +84,8 @@
 <div class="header">
     <FileMenu />
     <EditMenu />
+    <Menu label="View"></Menu>
+    <Menu label="Color"></Menu>
 </div>
 
 <div class="workspace">
@@ -123,7 +125,7 @@
         display: flex;
         position: absolute;
         top: 0;
-        height: 40px;
+        height: 24px;
         left: 0;
         right: 0;
         background-color: var(--menu-bar);
@@ -134,7 +136,7 @@
         position: absolute;
         left: 0;
         right: 0;
-        top: 42px;
+        top: 24px;
         bottom: 24px;
         display: flex;
         background-color: var(--main-color);
@@ -187,9 +189,10 @@
 
     .status-item {
         font-family: "Muncro", serif;
+        text-shadow: 2px 2px var(--inlay-color);
         font-size: 18px;
         color: var(--status-line-text);
-        margin: 0 10px;
+        margin: 0 16px;
         height: 100%;
         padding: 0;
     }

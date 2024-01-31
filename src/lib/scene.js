@@ -115,7 +115,7 @@ export class Scene {
 
     setPixel(uv, color) {
         const x = Math.ceil(uv.x * 64); // Why ceil? IDK LOL
-        const y = Math.ceil((1 - uv.y) * 64);
+        const y = Math.floor((1 - uv.y) * 64);
         const pos = (x * 4) + ((y * 64 - 1) * 4);
         this.data.set([color.r, color.g, color.b, Math.floor(color.a * 255)], pos);
         this.texture.needsUpdate = true;
