@@ -31,7 +31,7 @@
     function init() {
         scene = new Scene(renderer, sceneElement);
         scene.setModel("alex");
-        // setSkin("Incompleteusern");
+        setSkin("sourgummmybears");
         resize();
     }
 
@@ -68,7 +68,7 @@
             if (intersects.length > 0) {
                 mouseDown = true;
                 scene.controls.enabled = false;
-                scene.setPixel(intersects[0].uv, rgba);
+                scene.activeLayer().setPixel(intersects[0].uv, rgba);
             }
         }
     }
@@ -90,7 +90,7 @@
             if (intersects.length > 0) {
                 mouseDown = true;
                 scene.controls.enabled = false;
-                scene.setPixel(intersects[0].uv, rgba);
+                scene.activeLayer().setPixel(intersects[0].uv, rgba);
                 if (!palette.has(rgba)) {
                     palette.add(rgba);
                 }

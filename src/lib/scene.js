@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { createModel } from "./util/models.js";
+import { rgbaBlendNormal } from "./util/blending.js"
 
 const CAMERA_POSITION = new THREE.Vector3(0, 0, 30);
 const CONTROLS_TARGET = new THREE.Vector3(0, 0, 0);
@@ -24,6 +25,9 @@ export class Scene {
         this.controls.rotateSpeed = 2;
         this.controls.maxDistance = 200;
         this.controls.minDistance = 10;
+
+        this.layers = [new Layer(this, 'default')];
+        this.layer = 0;
 
         this.data = new Uint8Array(64 * 64 * 4);
         this.texture = new THREE.DataTexture(this.data, 64, 64);
@@ -60,6 +64,8 @@ export class Scene {
         this.camera.updateProjectionMatrix();
 
         this.renderer.render(this.scene, this.camera);
+
+        this.texture.needsUpdate = true; // Wah wah
     }
 
     updatePointer(x, y) {
@@ -103,22 +109,68 @@ export class Scene {
         this.texture.needsUpdate = true;
     }
 
+    activeLayer() {
+        return this.layers[this.layer];
+    }
+
+    updatePixel(x, y) {
+        let color = this.layers[0].getPixelByXY(x, y);
+        for (let i = 1; i < this.layers.length; i++) {
+            const l = this.layers[i];
+            const c = l.getPixelByXY(x, y);
+            if (c.a === 255) { // Alpha already transformed to 0-255 by layer
+                color = c;
+            } else {
+                color = rgbaBlendNormal(color, c);
+            }
+        }
+        console.log(color);
+        const pos = (x * 4) + ((y * 64 - 1) * 4);
+        this.data.set([color.r, color.g, color.b, color.a], pos);
+        this.texture.needsUpdate = true;
+    }
+
+}
+
+export class Layer {
+
+    constructor(scene, name) {
+        this.data = new Uint8Array(64 * 64 * 4);
+        this.scene = scene;
+        this.name = name;
+        this.isActive = true;
+    }
+
     getPixel(uv) {
-        const x = Math.floor(uv.x * 64);
+        const x = Math.ceil(uv.x * 64);
         const y = Math.floor((1 - uv.y) * 64);
-        const pos = (x * 4) + (y * 64 * 4);
+        return this.getPixelByXY(x, y);
+    }
+
+    getPixelByXY(x, y) {
+        const pos = (x * 4) + ((y * 64 - 1) * 4);
         return {
             r: this.data[pos], g: this.data[pos + 1],
-            b: this.data[pos + 2], a: this.data[pos + 3]
+            b: this.data[pos + 2], a: this.data[pos + 3],
         };
     }
 
     setPixel(uv, color) {
+        let c = { r: color.r, g: color.g, b: color.b, a: Math.floor(color.a * 255) };
         const x = Math.ceil(uv.x * 64); // Why ceil? IDK LOL
         const y = Math.floor((1 - uv.y) * 64);
         const pos = (x * 4) + ((y * 64 - 1) * 4);
-        this.data.set([color.r, color.g, color.b, Math.floor(color.a * 255)], pos);
-        this.texture.needsUpdate = true;
+        if (c.a !== 255) { // Mix colors if color is transparent
+            const current = this.getPixelByXY(x, y);
+            console.log(current.a);
+            c = rgbaBlendNormal(current, c);
+        }
+        // this.data.set([color.r, color.g, color.b, Math.floor(color.a * 255)], pos);
+        this.data[pos] = c.r;
+        this.data[pos + 1] = c.g;
+        this.data[pos + 2] = c.b;
+        this.data[pos + 3] = c.a;
+        this.scene.updatePixel(x, y);
     }
 
 }

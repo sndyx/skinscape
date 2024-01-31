@@ -37,7 +37,7 @@
     }
 
     function updateAlpha(clientX) {
-        hsva.a = Math.min(1, Math.max(0, 
+        hsva.a = Math.min(1, Math.max(0,
             (clientX - rect.left) / rect.width
         ));
     }
