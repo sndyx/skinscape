@@ -72,8 +72,8 @@ export function createModel(type, texture) {
         overlayMesh.name = name + "_overlay";
         overlayOutline.name = name + "_outline_overlay";
 
-        overlayMesh.scale.set(1.1, 1.1, 1.1);
-        overlayOutline.scale.set(1.1, 1.1, 1.1);
+        overlayMesh.scale.set(1.1, 1.05, 1.1);
+        overlayOutline.scale.set(1.1, 1.05, 1.1);
 
         overlayMesh.renderOrder = 1;
 
