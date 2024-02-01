@@ -9,7 +9,6 @@
     let canvas;
     let element;
 
-    let rgba = { r: 0, g: 0, b: 0, a: 1 };
     let renderer;
     let editors = [];
 
@@ -20,7 +19,6 @@
             props: {
                 renderer: renderer,
                 isFirst: isFirst,
-                rgba: rgba,
             },
         });
         editors.push(editor);

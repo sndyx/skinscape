@@ -1,14 +1,14 @@
 <script>
     import ColorPicker from "./color/ColorPicker.svelte";
     import Palette from "./color/Palette.svelte";
+    import { rgba, tool } from './stores.js';
     import { Scene } from "./scene.js";
-    import { onMount } from "svelte";
+    import { onMount,  } from "svelte";
     import UPNG from "upng-js";
-    import PartToggle from "$lib/PartToggle.svelte";
+    import { get } from "svelte/store";
 
     export let renderer;
 
-    export let rgba;
     export let isFirst = false;
 
     let palette = new Set();
@@ -18,15 +18,6 @@
     let centerElement;
 
     let scene;
-
-    let bodyToggles = {
-        head: true,
-        body: true,
-        leftArm: true,
-        leftLeg: true,
-        rightArm: true,
-        rightLeg: true,
-    };
 
     function init() {
         scene = new Scene(renderer, sceneElement);
@@ -68,7 +59,10 @@
             if (intersects.length > 0) {
                 mouseDown = true;
                 scene.controls.enabled = false;
-                scene.activeLayer().setPixel(intersects[0].uv, rgba);
+                const x = Math.ceil(intersects[0].uv.x * 64); // Why ceil? IDK LOL
+                const y = Math.floor((1 - intersects[0].uv.y) * 64);
+                let color = get(rgba);
+                get(tool).down(scene, x, y, color, intersects[0].face);
             }
         }
     }
@@ -81,26 +75,30 @@
             ((event.clientX - rect.left) / sceneElement.clientWidth) * 2 - 1,
             -((event.clientY - rect.top) / sceneElement.clientHeight) * 2 + 1,
         );
-        if (mouseDown) {
-            scene.raycaster.setFromCamera(scene.pointer, scene.camera);
-            const intersects = scene.raycaster.intersectObjects(
-                scene.scene.children,
-                true,
-            );
-            if (intersects.length > 0) {
-                mouseDown = true;
-                scene.controls.enabled = false;
-                scene.activeLayer().setPixel(intersects[0].uv, rgba);
-                if (!palette.has(rgba)) {
-                    palette.add(rgba);
-                }
+        scene.raycaster.setFromCamera(scene.pointer, scene.camera);
+        const intersects = scene.raycaster.intersectObjects(
+            scene.scene.children,
+            true,
+        );
+        if (intersects.length > 0) {
+            const x = Math.ceil(intersects[0].uv.x * 64);
+            const y = Math.floor((1 - intersects[0].uv.y) * 64);
+            let color = get(rgba);
+            if (mouseDown) {
+                get(tool).drag(scene, x, y, color, intersects[0].face);
+            } else {
+                get(tool).hover(scene, x, y, color, intersects[0].face);
             }
         }
     }
 
     function mouseup(event) {
         scene.controls.enabled = true;
-        if (event.button === 0) mouseDown = false;
+        if (event.button === 0) {
+            mouseDown = false;
+            let color = get(rgba);
+            get(tool).up(scene, color);
+        }
     }
 
     function keydown(event) {
@@ -124,11 +122,11 @@
 <div class="editor" bind:this={element}>
     <div class="left-sidebar">
         <div class="palette" style="width: {paletteWidth}px;">
-            <Palette bind:rgba bind:palette />
+            <Palette bind:rgba={$rgba} bind:palette />
         </div>
         {#if isFirst}
             <div class="picker" style="width: {paletteWidth}px;">
-                <ColorPicker bind:rgba />
+                <ColorPicker bind:rgba={$rgba} />
             </div>
         {/if}
     </div>

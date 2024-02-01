@@ -12,8 +12,5 @@ export function rgbaBlendNormal(backdrop, src) {
     const g = g1 + (g2 - g1) * (a2 / 255) / a;
     const b = b1 + (b2 - b1) * (a2 / 255) / a;
 
-    console.log(`Src: ${src.r} ${src.g} ${src.b} ${src.a}`);
-    console.log(`Bg: ${backdrop.r} ${backdrop.g} ${backdrop.b} ${backdrop.a}`);
-
     return { r: r, g: g, b: b, a: a * 255 };
 }

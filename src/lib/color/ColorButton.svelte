@@ -2,6 +2,8 @@
     import { colord } from "colord";
 
     export let rgba;
+
+    let hsva;
     
     let element;
     let shouldUpdate = true;

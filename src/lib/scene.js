@@ -106,6 +106,7 @@ export class Scene {
 
     setTexture(data) {
         this.data.set(data);
+        this.activeLayer().data.set(data);
         this.texture.needsUpdate = true;
     }
 
@@ -113,11 +114,11 @@ export class Scene {
         return this.layers[this.layer];
     }
 
-    updatePixel(x, y) {
-        let color = this.layers[0].getPixelByXY(x, y);
+    updatePixel(pos) {
+        let color = this.layers[0].getPixelByPos(pos);
         for (let i = 1; i < this.layers.length; i++) {
             const l = this.layers[i];
-            const c = l.getPixelByXY(x, y);
+            const c = l.getPixelByPos(pos);
             if (c.a === 255) { // Alpha already transformed to 0-255 by layer
                 color = c;
             } else {
@@ -125,7 +126,6 @@ export class Scene {
             }
         }
         console.log(color);
-        const pos = (x * 4) + ((y * 64 - 1) * 4);
         this.data.set([color.r, color.g, color.b, color.a], pos);
         this.texture.needsUpdate = true;
     }
@@ -141,36 +141,29 @@ export class Layer {
         this.isActive = true;
     }
 
-    getPixel(uv) {
-        const x = Math.ceil(uv.x * 64);
-        const y = Math.floor((1 - uv.y) * 64);
-        return this.getPixelByXY(x, y);
+    getPixel(x, y) {
+        const pos = (x * 4) + ((y * 64 - 1) * 4);
+        return this.getPixelByPos(pos);
     }
 
-    getPixelByXY(x, y) {
-        const pos = (x * 4) + ((y * 64 - 1) * 4);
+    getPixelByPos(pos) {
         return {
             r: this.data[pos], g: this.data[pos + 1],
             b: this.data[pos + 2], a: this.data[pos + 3],
         };
     }
 
-    setPixel(uv, color) {
+    setPixel(x, y, color) {
         let c = { r: color.r, g: color.g, b: color.b, a: Math.floor(color.a * 255) };
-        const x = Math.ceil(uv.x * 64); // Why ceil? IDK LOL
-        const y = Math.floor((1 - uv.y) * 64);
         const pos = (x * 4) + ((y * 64 - 1) * 4);
+        console.log(`Color: ${color.r} ${color.g} ${color.b} ${color.a}`)
         if (c.a !== 255) { // Mix colors if color is transparent
-            const current = this.getPixelByXY(x, y);
-            console.log(current.a);
+            const current = this.getPixelByPos(pos);
+            console.log(`Current: ${current.r} ${current.g} ${current.b} ${current.a}`)
             c = rgbaBlendNormal(current, c);
         }
-        // this.data.set([color.r, color.g, color.b, Math.floor(color.a * 255)], pos);
-        this.data[pos] = c.r;
-        this.data[pos + 1] = c.g;
-        this.data[pos + 2] = c.b;
-        this.data[pos + 3] = c.a;
-        this.scene.updatePixel(x, y);
+        this.data.set([c.r, c.g, c.b, c.a], pos);
+        this.scene.updatePixel(pos);
     }
 
 }
