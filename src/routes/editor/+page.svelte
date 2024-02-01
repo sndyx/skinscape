@@ -5,18 +5,24 @@
     import FileMenu from "$lib/FileMenu.svelte";
     import EditMenu from "$lib/EditMenu.svelte";
     import Menu from "$lib/Menu.svelte";
+    import Tool from "$lib/Tool.svelte";
+    import { Pencil, Fill, Eyedropper } from "$lib/tools.js";
+    import eyedropper from "$lib/assets/icons/eyedropper.png";
+    import pencil from "$lib/assets/icons/pencil.png"
 
     let canvas;
     let element;
 
     let renderer;
     let editors = [];
+    let eid = 0;
 
     function addEditor() {
         let isFirst = editors.length === 0;
         const editor = new Editor({
             target: element,
             props: {
+                eid: eid++,
                 renderer: renderer,
                 isFirst: isFirst,
             },
@@ -45,7 +51,19 @@
         }
     }
 
+    let frames = 0;
+    let prevTime = performance.now();
+
     function render() {
+        frames ++;
+        const time = performance.now();
+
+        if (time >= prevTime + 1000) {
+            console.log(Math.round((frames * 1000) / (time - prevTime)));
+            frames = 0;
+            prevTime = time;
+        }
+
         renderer.setClearColor(0x000000, 0);
         renderer.setScissorTest(false);
         renderer.clear();
@@ -88,7 +106,10 @@
 
 <div class="workspace">
     <div class="editors" bind:this={element}></div>
-    <div class="tool-bar"></div>
+    <div class="tool-bar">
+        <Tool icon={pencil} newTool={new Pencil()} />
+        <Tool icon={eyedropper} newTool={new Eyedropper()} />
+    </div>
 </div>
 
 <div class="status-bar">
@@ -127,14 +148,14 @@
         left: 0;
         right: 0;
         background-color: var(--menu-bar);
-        border-bottom: 2px solid var(--highlight-dark);
+        border-bottom: 2px solid var(--highlight-light);
     }
 
     .workspace {
         position: absolute;
         left: 0;
         right: 0;
-        top: 24px;
+        top: 26px;
         bottom: 24px;
         display: flex;
         background-color: var(--main-color);
@@ -143,7 +164,7 @@
     .editors {
         position: absolute;
         left: 0;
-        right: 34px;
+        right: 66px;
         height: 100%;
         display: flex;
     }
@@ -151,11 +172,14 @@
     .tool-bar {
         position: absolute;
         right: 0;
-        width: 34px;
+        width: 36px;
+        padding: 12px 8px;
         height: 100%;
         display: flex;
         flex-direction: column;
-        background: red;
+        background: var(--inlay-color);
+        border-left: 2px solid var(--highlight-dark);
+        margin-left: 12px;
     }
 
     .status-bar {

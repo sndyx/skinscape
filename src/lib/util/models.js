@@ -21,9 +21,9 @@ const DESCRIPTORS = {
 const Y_OFFSET = 1.4; // Moves model to center of camera (moving camera instead centers model weirdly)
 
 export function createModel(type, texture) {
-    let descriptor = DESCRIPTORS[type];
-    const properties = Object.getOwnPropertyNames(descriptor.model)
-    let group = [];
+    const descriptor = DESCRIPTORS[type];
+    const properties = Object.getOwnPropertyNames(descriptor.model);
+    const group = [];
     for (let i = 0; i < properties.length; i++) {
         const part = descriptor['model'][properties[i]];
         const mapping = descriptor['mappings'][properties[i]];
@@ -64,8 +64,7 @@ export function createModel(type, texture) {
         overlayMesh.layers.set(1);
         outline.layers.set(2);
 
-
-        let name = properties[i];
+        const name = properties[i];
 
         mesh.name = name;
         outline.name = name + "_outline";

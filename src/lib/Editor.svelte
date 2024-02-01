@@ -1,7 +1,7 @@
 <script>
     import ColorPicker from "./color/ColorPicker.svelte";
     import Palette from "./color/Palette.svelte";
-    import { rgba, tool } from './stores.js';
+    import { rgba, tool, activeEditor } from './stores.js';
     import { Scene } from "./scene.js";
     import { onMount,  } from "svelte";
     import UPNG from "upng-js";
@@ -9,7 +9,8 @@
 
     export let renderer;
 
-    export let isFirst = false;
+    export let isFirst;
+    export let eid;
 
     let palette = new Set();
 
@@ -22,7 +23,7 @@
     function init() {
         scene = new Scene(renderer, sceneElement);
         scene.setModel("alex");
-        setSkin("sourgummmybears");
+        // setSkin("Richardsonyr");
         resize();
     }
 
@@ -43,6 +44,7 @@
     }
 
     function mousedown(event) {
+        activeEditor.set(eid);
         // Mandatory for now, prevents bug related to selection getting scene OrbitControls stuck
         // Seems more related to canvas than THREE.js as it has happened on the color picker as well
         (window.getSelection
@@ -62,7 +64,7 @@
                 const x = Math.ceil(intersects[0].uv.x * 64); // Why ceil? IDK LOL
                 const y = Math.floor((1 - intersects[0].uv.y) * 64);
                 let color = get(rgba);
-                get(tool).down(scene, x, y, color, intersects[0].face);
+                get(tool).down(scene, x, y, color);
             }
         }
     }
@@ -85,9 +87,9 @@
             const y = Math.floor((1 - intersects[0].uv.y) * 64);
             let color = get(rgba);
             if (mouseDown) {
-                get(tool).drag(scene, x, y, color, intersects[0].face);
+                get(tool).drag(scene, x, y, color);
             } else {
-                get(tool).hover(scene, x, y, color, intersects[0].face);
+                get(tool).hover(scene, x, y, color);
             }
         }
     }
@@ -102,10 +104,12 @@
     }
 
     function keydown(event) {
-        if (event.key === "g") {
-            scene.toggleGridlines(!scene.gridlines);
-        } else if (event.key === "o") {
-            scene.toggleOverlay(!scene.overlay);
+        if (get(activeEditor) === eid) {
+            if (event.key === "g") {
+                scene.toggleGridlines(!scene.gridlines);
+            } else if (event.key === "o") {
+                scene.toggleOverlay(!scene.overlay);
+            }
         }
     }
 

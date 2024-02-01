@@ -102,6 +102,7 @@ export class Scene {
         this.objects.clear();
         const models = createModel(name, this.texture);
         models.forEach((it) => { this.objects.add(it) });
+        this.model = name;
     }
 
     setTexture(data) {
@@ -125,7 +126,6 @@ export class Scene {
                 color = rgbaBlendNormal(color, c);
             }
         }
-        console.log(color);
         this.data.set([color.r, color.g, color.b, color.a], pos);
         this.texture.needsUpdate = true;
     }
@@ -156,10 +156,8 @@ export class Layer {
     setPixel(x, y, color) {
         let c = { r: color.r, g: color.g, b: color.b, a: Math.floor(color.a * 255) };
         const pos = (x * 4) + ((y * 64 - 1) * 4);
-        console.log(`Color: ${color.r} ${color.g} ${color.b} ${color.a}`)
         if (c.a !== 255) { // Mix colors if color is transparent
             const current = this.getPixelByPos(pos);
-            console.log(`Current: ${current.r} ${current.g} ${current.b} ${current.a}`)
             c = rgbaBlendNormal(current, c);
         }
         this.data.set([c.r, c.g, c.b, c.a], pos);
