@@ -28,4 +28,9 @@
         font-weight: 500;
         src: url('/fonts/slkscr.woff2') format('woff')
     }
+
+    :global(div) {
+        cursor: url("/icons/cursor@2x.png"), auto;
+        image-rendering: pixelated;
+    }
 </style>

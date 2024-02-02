@@ -8,7 +8,8 @@
     import Tool from "$lib/Tool.svelte";
     import { Pencil, Fill, Eyedropper } from "$lib/tools.js";
     import eyedropper from "$lib/assets/icons/eyedropper.png";
-    import pencil from "$lib/assets/icons/pencil.png"
+    import pencil from "$lib/assets/icons/pencil.png";
+    import paint_bucket from "$lib/assets/icons/paint_bucket.png";
 
     let canvas;
     let element;
@@ -109,6 +110,7 @@
     <div class="tool-bar">
         <Tool icon={pencil} newTool={new Pencil()} />
         <Tool icon={eyedropper} newTool={new Eyedropper()} />
+        <Tool icon={paint_bucket} newTool={new Fill()} />
     </div>
 </div>
 
@@ -164,7 +166,7 @@
     .editors {
         position: absolute;
         left: 0;
-        right: 66px;
+        right: 50px;
         height: 100%;
         display: flex;
     }
@@ -172,14 +174,11 @@
     .tool-bar {
         position: absolute;
         right: 0;
-        width: 36px;
-        padding: 12px 8px;
+        width: 44px;
+        padding: 14px 4px;
         height: 100%;
         display: flex;
         flex-direction: column;
-        background: var(--inlay-color);
-        border-left: 2px solid var(--highlight-dark);
-        margin-left: 12px;
     }
 
     .status-bar {

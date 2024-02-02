@@ -23,7 +23,7 @@
     function init() {
         scene = new Scene(renderer, sceneElement);
         scene.setModel("alex");
-        // setSkin("Richardsonyr");
+        setSkin("sourgummmybears");
         resize();
     }
 

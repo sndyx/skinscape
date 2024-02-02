@@ -25,11 +25,17 @@
 
     function mousedown(event) {
         button = event.button;
-        if (button !== -1) updateHue(event.clientX, event.clientY);
+        if (button !== -1) {
+            updateHue(event.clientX, event.clientY);
+            document.getElementsByTagName("body")[0].style.cursor = 'url("/icons/eyedropper@2x.png") 0 22, auto;';
+        }
     }
 
     function mouseup(event) {
-        if (button === event.button) button = -1;
+        if (button === event.button) {
+            button = -1;
+            document.getElementsByTagName("body")[0].style.cursor = "";
+        }
     }
 
     function mousemove(event) {
