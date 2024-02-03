@@ -58,7 +58,6 @@
         flex-direction: column;
         position: relative;
         margin: 4px 4px 8px;
-        cursor: url("/icons/eyedropper@2x.png") 0 22, auto;
 
         box-shadow: 2px 0 0 0 #000, -2px 0 0 0 #000, 0 2px 0 0 #000, 0 -2px 0 0 #000, 0 0 0 2px var(--highlight-light), 4px 0 0 0 var(--highlight-light), -4px 0 0 0 var(--highlight-light), 0 4px 0 0 var(--highlight-light), 0 -4px 0 0 var(--highlight-dark);
     }

@@ -1,15 +1,11 @@
 <script>
-    import Editor from "$lib/Editor.svelte";
-    import { onMount } from "svelte";
     import * as THREE from "three";
+    import Editor from "$lib/editor/Editor.svelte";
     import FileMenu from "$lib/FileMenu.svelte";
     import EditMenu from "$lib/EditMenu.svelte";
     import Menu from "$lib/Menu.svelte";
-    import Tool from "$lib/Tool.svelte";
-    import { Pencil, Fill, Eyedropper } from "$lib/tools.js";
-    import eyedropper from "$lib/assets/icons/eyedropper.png";
-    import pencil from "$lib/assets/icons/pencil.png";
-    import paint_bucket from "$lib/assets/icons/paint_bucket.png";
+    import Toolbar from "$lib/editor/Toolbar.svelte";
+    import { onMount } from "svelte";
 
     let canvas;
     let element;
@@ -38,17 +34,6 @@
 
         if (canvas.width !== width || canvas.height !== height) {
             renderer.setSize(width, height, false);
-        }
-        updateEditorSizes();
-    }
-
-    function updateEditorSizes() {
-        const sceneWidth =
-            (element.clientWidth -
-                (Math.min(120, window.innerWidth / 10) + 24) -
-                58 * (editors.length - 1)) / editors.length;
-        for (let i = 0; i < editors.length; i++) {
-            editors[i].setWidth(sceneWidth);
         }
     }
 
@@ -99,18 +84,26 @@
 <canvas bind:this={canvas}></canvas>
 
 <div class="header">
-    <FileMenu />
-    <EditMenu />
-    <Menu label="View"></Menu>
-    <Menu label="Color"></Menu>
+    <div class="header-left">
+        <FileMenu />
+        <EditMenu />
+        <Menu label="View"></Menu>
+        <Menu label="Color"></Menu>
+    </div>
+    <div class="header-right">
+        <a href="/donate" class="heart">
+            <img alt="heart" src="/icons/heart.png" width="18" height="18" />
+        </a>
+        <div class="login">
+            <img alt="login" src="/icons/login.png" width="60" height="18" />
+        </div>
+    </div>
 </div>
 
 <div class="workspace">
     <div class="editors" bind:this={element}></div>
     <div class="tool-bar">
-        <Tool icon={pencil} newTool={new Pencil()} />
-        <Tool icon={eyedropper} newTool={new Eyedropper()} />
-        <Tool icon={paint_bucket} newTool={new Fill()} />
+        <Toolbar />
     </div>
 </div>
 
@@ -153,6 +146,26 @@
         border-bottom: 2px solid var(--highlight-light);
     }
 
+    .header-left {
+        flex: 1;
+        display: flex;
+        justify-content: left;
+    }
+
+    .header-right {
+        flex: 1;
+        display: flex;
+        justify-content: right;
+    }
+
+    .heart {
+        padding: 2px;
+    }
+
+    .login {
+        padding: 2px 10px;
+    }
+
     .workspace {
         position: absolute;
         left: 0;
@@ -179,6 +192,10 @@
         height: 100%;
         display: flex;
         flex-direction: column;
+    }
+
+    .tool-bar svg {
+        fill: red;
     }
 
     .status-bar {

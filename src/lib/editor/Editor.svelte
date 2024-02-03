@@ -1,8 +1,8 @@
 <script>
-    import ColorPicker from "./color/ColorPicker.svelte";
-    import Palette from "./color/Palette.svelte";
-    import { rgba, tool, activeEditor } from './stores.js';
-    import { Scene } from "./scene.js";
+    import ColorPicker from "../color/ColorPicker.svelte";
+    import Palette from "../color/Palette.svelte";
+    import { rgba, tool, activeEditor } from '../stores.js';
+    import { Scene } from "../scene.js";
     import { onMount,  } from "svelte";
     import UPNG from "upng-js";
     import { get } from "svelte/store";
@@ -14,17 +14,13 @@
 
     let palette = new Set();
 
-    let element;
     let sceneElement;
-    let centerElement;
-
     let scene;
 
     function init() {
         scene = new Scene(renderer, sceneElement);
         scene.setModel("alex");
-        setSkin("sourgummmybears");
-        resize();
+        // setSkin("sourgummmybears");
     }
 
     onMount(init);
@@ -36,11 +32,6 @@
 
     export function render() {
         scene.render();
-    }
-
-    export function setWidth(width) {
-        centerElement.setAttribute("style", `width:${width}px;`);
-        // center.style.width = `${width}px;`;  This doesnt work!! haha :(
     }
 
     function mousedown(event) {
@@ -112,75 +103,66 @@
             }
         }
     }
-
-    let paletteWidth = 0;
-    function resize() {
-        if (isFirst) paletteWidth = Math.min(120, window.innerWidth / 10);
-        // else paletteWidth = 32 * Math.max(Math.min(Math.ceil(palette.length / Math.floor((element.clientHeight - 32) / 37)), 5), 2);
-        else paletteWidth = 34;
-    }
 </script>
 
-<svelte:window on:keydown={keydown} on:resize={resize} />
+<svelte:window on:keydown={keydown} />
 
-<div class="editor" bind:this={element}>
-    <div class="left-sidebar">
-        <div class="palette" style="width: {paletteWidth}px;">
-            <Palette bind:rgba={$rgba} bind:palette />
-        </div>
-        {#if isFirst}
-            <div class="picker" style="width: {paletteWidth}px;">
-                <ColorPicker bind:rgba={$rgba} />
-            </div>
-        {/if}
+<div class="editor-sidebar">
+    <div class="palette-container">
+        <Palette bind:rgba={$rgba} bind:palette />
     </div>
-    <div class="center" bind:this={centerElement}>
-        <!-- svelte-ignore a11y-no-static-element-interactions -->
-        <div
-            class="scene"
-            bind:this={sceneElement}
-            on:mousedown={mousedown}
-            on:mousemove={mousemove}
-            on:mouseup={mouseup}
-        >
-            <!---
-            <div class="part-toggle">
-                <PartToggle bind:bodyToggles />
-            </div>
-            -->
+    {#if isFirst}
+        <div class="picker-container">
+            <ColorPicker bind:rgba={$rgba} />
         </div>
+    {/if}
+</div>
+<div class="center">
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
+    <div
+        class="scene"
+        bind:this={sceneElement}
+        on:mousedown={mousedown}
+        on:mousemove={mousemove}
+        on:mouseup={mouseup}
+    >
+        <!---
+        <div class="part-toggle">
+            <PartToggle bind:bodyToggles />
+        </div>
+        -->
     </div>
 </div>
 
 <style>
-    .editor {
-        height: 100%;
-        width: fit-content;
+    .editor-sidebar {
         display: flex;
-    }
-
-    .left-sidebar {
-        display: flex;
-        position: relative;
         flex-direction: column;
+        width: 34px;
         height: calc(100% - 24px);
         padding: 12px;
     }
 
-    .center {
-        position: relative;
-        height: calc(100% - 24px);
-        padding: 12px 0 12px 0;
+    .editor-sidebar:has(.picker-container) {
+        flex: 1;
+        min-width: 68px;
+        max-width: 120px;
     }
 
-    .palette {
+    .palette-container {
         height: 100%;
     }
 
-    .picker {
+    .picker-container {
         height: calc(30% - 6px);
         margin-top: 12px;
         bottom: 0;
+    }
+
+    .center {
+        flex: 5;
+        height: calc(100% - 24px);
+        padding: 12px 0 12px 0;
     }
 
     .scene {
@@ -204,17 +186,5 @@
             4px 0 0 2px #000,
             0 4px 0 2px #000,
             0 -4px 0 2px #000;
-    }
-
-    .part-toggle {
-        z-index: 5;
-        position: absolute;
-        width: 9vw;
-        height: 15vw;
-        right: 0;
-        bottom: 0;
-    }
-
-    @media screen and (max-height: 1024px) {
     }
 </style>

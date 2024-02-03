@@ -29,8 +29,8 @@
         src: url('/fonts/slkscr.woff2') format('woff')
     }
 
-    :global(div) {
-        cursor: url("/icons/cursor@2x.png"), auto;
+    :global(*) {
         image-rendering: pixelated;
+        overflow: hidden;
     }
 </style>
