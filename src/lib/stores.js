@@ -3,7 +3,7 @@ import { Pencil, Fill } from "./tools.js";
 
 export const preferences = writable({
     theme: 'light',
-    gridlines: false,
+    language: 'english',
 });
 
 export const rgba = writable({ r: 0, g: 0, b: 0, a: 1 });

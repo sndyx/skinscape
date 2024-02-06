@@ -1,0 +1,13 @@
+{
+  "editor": {
+    "header": {
+      "file": "File",
+      "edit": "Edit",
+      "view": "View",
+      "color": "Color",
+      "login": "Login"
+    },
+    "untitled-skin": "Untitled Skin",
+    "layer": "Layer"
+  }
+}
