@@ -29,7 +29,10 @@
     }
 
     function mouseup(event) {
-        if (button === event.button) document.getElementsByTagName("body")[0].style.cursor = "";
+        if (button === event.button) {
+            document.getElementsByTagName("body")[0].style.cursor = "";
+            button = -1;
+        }
     }
 
     function mousemove(event) {

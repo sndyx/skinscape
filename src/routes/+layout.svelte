@@ -1,6 +1,7 @@
 <script lang="ts">
     import { preferences } from '$lib/stores'
     import { get } from 'svelte/store';
+    import { _ } from '$lib/i18n';
 
     let theme = get(preferences).theme;
 
@@ -27,6 +28,12 @@
         font-style: normal;
         font-weight: 500;
         src: url('/fonts/slkscr.woff2') format('woff')
+    }
+    @font-face {
+        font-family: 'Battlenet';
+        font-style: normal;
+        font-weight: 500;
+        src: url('/fonts/battlenet.woff2') format('woff')
     }
 
     :global(*) {

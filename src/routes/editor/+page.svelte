@@ -6,6 +6,8 @@
     import Menu from "$lib/Menu.svelte";
     import Toolbar from "$lib/editor/Toolbar.svelte";
     import { onMount } from "svelte";
+    import Header from "../../lib/editor/Header.svelte";
+    import StatusBar from "../../lib/editor/StatusBar.svelte";
 
     let canvas;
     let element;
@@ -83,44 +85,17 @@
 
 <canvas bind:this={canvas}></canvas>
 
-<div class="header">
-    <div class="header-left">
-        <FileMenu />
-        <EditMenu />
-        <Menu label="View"></Menu>
-        <Menu label="Color"></Menu>
-    </div>
-    <div class="header-right">
-        <a href="/donate" class="heart">
-            <img alt="heart" src="/icons/heart.png" width="18" height="18" />
-        </a>
-        <div class="login">
-            <img alt="login" src="/icons/login.png" width="60" height="18" />
+<div class="container">
+    <Header />
+
+    <div class="workspace">
+        <div class="editors" bind:this={element}></div>
+        <div class="tool-bar">
+            <Toolbar />
         </div>
     </div>
-</div>
 
-<div class="workspace">
-    <div class="editors" bind:this={element}></div>
-    <div class="tool-bar">
-        <Toolbar />
-    </div>
-</div>
-
-<div class="status-bar">
-    <div class="status-bar-left">
-        <p class="status-item">
-            Untitled Skin
-        </p>
-        <p class="status-item">
-            Layer 1
-        </p>
-    </div>
-    <div class="status-bar-right">
-        <p class="status-item">
-            64x64
-        </p>
-    </div>
+    <StatusBar />
 </div>
 
 <style>
@@ -135,103 +110,33 @@
         background: rgba(0, 0, 0, 0);
     }
 
-    .header {
-        display: flex;
+    .container {
         position: absolute;
-        top: 0;
-        height: 24px;
-        left: 0;
-        right: 0;
-        background-color: var(--menu-bar);
-        border-bottom: 2px solid var(--highlight-light);
-    }
-
-    .header-left {
-        flex: 1;
+        inset: 0;
         display: flex;
-        justify-content: left;
-    }
-
-    .header-right {
-        flex: 1;
-        display: flex;
-        justify-content: right;
-    }
-
-    .heart {
-        padding: 2px;
-    }
-
-    .login {
-        padding: 2px 10px;
+        flex-direction: column;
     }
 
     .workspace {
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 26px;
-        bottom: 24px;
+        flex: 1;
         display: flex;
         background-color: var(--main-color);
     }
 
     .editors {
-        position: absolute;
-        left: 0;
-        right: 50px;
+        flex: 1;
         height: 100%;
         display: flex;
+        flex-direction: row;
     }
 
     .tool-bar {
-        position: absolute;
-        right: 0;
         width: 44px;
-        padding: 14px 4px;
-        height: 100%;
         display: flex;
         flex-direction: column;
     }
 
     .tool-bar svg {
         fill: red;
-    }
-
-    .status-bar {
-        position: absolute;
-        bottom: 0;
-        height: 20px;
-        left: 0;
-        right: 0;
-        display: flex;
-        justify-content: space-between;
-        background-color: var(--status-line);
-        box-shadow:
-            0 -2px 0 0 var(--highlight-light),
-            0 -4px 0 0 #000;
-        overflow: hidden;
-    }
-
-    .status-bar-left {
-        flex: 1;
-        display: flex;
-        justify-content: left;
-    }
-
-    .status-bar-right {
-        flex: 1;
-        display: flex;
-        justify-content: right;
-    }
-
-    .status-item {
-        font-family: "Muncro", serif;
-        text-shadow: 2px 2px var(--inlay-color);
-        font-size: 18px;
-        color: var(--status-line-text);
-        margin: 0 16px;
-        height: 100%;
-        padding: 0;
     }
 </style>

@@ -1,7 +1,13 @@
 :root {
-    --main-color: #2a2a2b;
-    --inlay-color: #101010;
-    --highlight-dark: #515152;
-    --highlight: #8a8a8b;
-    --highlight-light: #bbbbbb;
+    --main-color: #ff0000;
+    --inlay-color: #ff0000;
+    --status-line: #ff0000;
+    --tool-bg: #ff0000;
+    --status-line-text: #ff0000;
+    --tool-color: #ff0000;
+    --menu-bar: #ff0000;
+    --canvas-color: #ff0000;
+    --highlight-dark: #ff0000;
+    --highlight-light: #ff0000;
+    --text-color: #ff0000;
 }
