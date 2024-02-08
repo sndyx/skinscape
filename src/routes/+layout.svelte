@@ -1,9 +1,8 @@
 <script lang="ts">
-    import { preferences } from '$lib/stores'
+    import { preferences } from '$lib/stores';
     import { get } from 'svelte/store';
-    import { _ } from '$lib/i18n';
 
-    let theme = get(preferences).theme;
+    let theme = get(preferences)['theme'];
 
     preferences.subscribe(value => {
         value.theme
@@ -13,7 +12,7 @@
 <svelte:head>
     <link rel="stylesheet" href={`/themes/${theme}.css`} />
 </svelte:head>
-  
+
 <slot />
 
 <style>

@@ -2,8 +2,8 @@ import { writable } from 'svelte/store';
 import { Pencil, Fill } from "./tools.js";
 
 export const preferences = writable({
-    theme: 'sakura',
-    language: 'english',
+    theme: 'light',
+    language: 'auto',
 });
 
 export const rgba = writable({ r: 0, g: 0, b: 0, a: 1 });
