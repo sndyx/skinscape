@@ -30,10 +30,10 @@
         src: url('/fonts/slkscr.woff2') format('woff')
     }
     @font-face {
-        font-family: 'Battlenet';
+        font-family: 'LanaPixel';
         font-style: normal;
         font-weight: 500;
-        src: url('/fonts/battlenet.woff2') format('woff')
+        src: url('/fonts/LanaPixel.woff2') format('woff')
     }
 
     :global(*) {
