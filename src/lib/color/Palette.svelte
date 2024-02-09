@@ -22,7 +22,7 @@
         margin: 4px;
         background: var(--inlay-color);
         overflow-y: scroll;
-        box-shadow: 2px 0 0 0 #000, -2px 0 0 0 #000, 0 2px 0 0 #000, 0 -2px 0 0 #000, 0 0 0 2px var(--highlight-dark), 4px 0 0 0 var(--highlight-dark), -4px 0 0 0 var(--highlight-dark), 0 4px 0 0 var(--highlight-light), 0 -4px 0 0 var(--highlight-dark);
+        box-shadow: 2px 0 0 0 var(--border-dark), -2px 0 0 0 var(--border-dark), 0 2px 0 0 var(--border-dark), 0 -2px 0 0 var(--border-dark), 0 0 0 2px var(--border-color), 4px 0 0 0 var(--border-color), -4px 0 0 0 var(--border-color), 0 4px 0 0 var(--border-light), 0 -4px 0 0 var(--border-color);
     }
 
     .palette {

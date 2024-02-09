@@ -8,7 +8,7 @@
     import { onMount } from "svelte";
     import Header from "../../lib/editor/Header.svelte";
     import StatusBar from "../../lib/editor/StatusBar.svelte";
-    import ConfigBar from "$lib/editor/ConfigBar.svelte";
+    import ConfigBar from "$lib/editor/config/ConfigBar.svelte";
 
     let canvas;
     let element;

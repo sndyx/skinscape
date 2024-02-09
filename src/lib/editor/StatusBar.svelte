@@ -23,6 +23,7 @@
         height: 22px;
         padding: 2px 20px;
         display: flex;
+        background-color: var(--status-line);
     }
 
     .status-bar-left {
@@ -43,5 +44,6 @@
         font-family: LanaPixel, serif;
         font-size: 22px;
         margin: 0;
+        color: var(--text-color);
     }
 </style>
