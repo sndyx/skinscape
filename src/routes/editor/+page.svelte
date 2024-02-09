@@ -8,6 +8,7 @@
     import { onMount } from "svelte";
     import Header from "../../lib/editor/Header.svelte";
     import StatusBar from "../../lib/editor/StatusBar.svelte";
+    import ConfigBar from "$lib/editor/ConfigBar.svelte";
 
     let canvas;
     let element;
@@ -88,8 +89,11 @@
 <div class="container">
     <Header />
 
-    <div class="workspace">
-        <div class="editors" bind:this={element}></div>
+    <div class="center-panel">
+        <div class="workspace">
+            <ConfigBar />
+            <div class="editors" bind:this={element}></div>
+        </div>
         <div class="tool-bar">
             <Toolbar />
         </div>
@@ -117,10 +121,17 @@
         flex-direction: column;
     }
 
-    .workspace {
+    .center-panel {
         flex: 1;
         display: flex;
         background-color: var(--main-color);
+    }
+
+    .workspace {
+        flex: 1;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
     }
 
     .editors {

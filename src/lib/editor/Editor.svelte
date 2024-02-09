@@ -139,8 +139,8 @@
         display: flex;
         flex-direction: column;
         width: 34px;
-        height: calc(100% - 24px);
-        padding: 12px;
+        height: calc(100% - 12px);
+        padding: 0 12px 12px 12px;
     }
 
     .editor-sidebar:has(.picker-container) {
@@ -161,8 +161,8 @@
 
     .center {
         flex: 5;
-        height: calc(100% - 24px);
-        padding: 12px 0 12px 0;
+        height: calc(100% - 12px);
+        padding-bottom: 12px;
     }
 
     .scene {

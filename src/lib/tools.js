@@ -2,6 +2,8 @@ import { rgba } from "./stores.js";
 import steve64 from '../models/steve64.json';
 import alex64 from '../models/alex64.json';
 
+import PencilConfig from "$lib/editor/config/PencilConfig.svelte";
+
 const DIRECTIONS = ['right', 'left', 'top', 'bottom', 'front', 'back'];
 const DIRECTION_MAP = {
     'right': ['depth', 'height'],
@@ -17,6 +19,7 @@ const DESCRIPTORS = {
 };
 
 export class Tool {
+
     hover(scene, x, y, color) {}
 
     down(scene, x, y, color) {}
@@ -65,6 +68,7 @@ export class Pencil extends Tool {
 
     constructor() {
         super();
+        this.configComponent = PencilConfig
         this.visited = new Set()
     }
 

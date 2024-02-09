@@ -1,4 +1,7 @@
 # Skinscape Checklist
+
+## Progress
+
 ### Editor
 - [ ] Editor
     - [ ] Scene
@@ -81,3 +84,9 @@
             - [ ] Pinned skins
     - [ ] Account creation
     - [ ] Settings
+
+## Theming
+
+##### Global
+
+- border
