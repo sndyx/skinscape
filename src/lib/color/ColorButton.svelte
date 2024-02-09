@@ -48,7 +48,8 @@
     style="--color: {hex}; --inverted: {inverted}; --solid: {solid};"
     on:click={click}
 >
-    <span>#</span><input 
+    <span class="text">#</span><input
+        class="text"
         bind:this={element}
         bind:value={text}
         on:input={input} 

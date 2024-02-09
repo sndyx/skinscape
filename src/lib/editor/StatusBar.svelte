@@ -4,15 +4,15 @@
 
 <div class="status-bar">
     <div class="status-bar-left">
-        <p class="status-item">
+        <p class="status-text text">
             {$_('editor.untitled-skin')}
         </p>
-        <p class="status-item">
+        <p class="status-text text">
             {$_('editor.layer')} 1
         </p>
     </div>
     <div class="status-bar-right">
-        <p class="status-item">
+        <p class="status-text text">
             64x64
         </p>
     </div>
@@ -40,7 +40,7 @@
         gap: 20px;
     }
 
-    .status-item {
+    .status-text {
         font-family: LanaPixel, serif;
         font-size: 22px;
         margin: 0;

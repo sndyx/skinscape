@@ -44,7 +44,7 @@
 <svelte:window on:mousemove={mousemove} />
 
 <div class="menu" bind:this={menu} on:click={click}>
-    <p>{label}</p>
+    <p class="menu-item text">{label}</p>
 </div>
 
 <div class="content" bind:this={content} style="display: none;">
