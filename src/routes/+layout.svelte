@@ -35,8 +35,19 @@
         src: url('/fonts/LanaPixel.woff2') format('woff')
     }
 
-    :global(*) {
+    :global(*) { /* Only works with :global despite being in a layout? */
         image-rendering: pixelated;
         overflow: hidden;
+
+        -webkit-user-select: none; /* Chrome/Safari */
+        -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* IE10+ */
+        user-select: none;
+    }
+    :global(.text) {
+        -webkit-user-select: auto;
+        -moz-user-select: auto;
+        -ms-user-select: auto;
+        user-select: auto;
     }
 </style>
