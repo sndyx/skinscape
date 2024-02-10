@@ -12,7 +12,6 @@
 <style>
     .config-bar {
         height: 28px;
-        width: 100%;
         padding: 6px 12px;
         display: flex;
         gap: 6px;

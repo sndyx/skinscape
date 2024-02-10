@@ -7,5 +7,7 @@ import Button from "$lib/common/Button.svelte";
 </div>
 
 <style>
-
+    .toolbar {
+        width: 40px;
+    }
 </style>

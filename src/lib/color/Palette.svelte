@@ -17,8 +17,7 @@
         flex-flow: row wrap;
         align-content: flex-start;
         position: relative;
-        width: calc(100% - 8px);
-        height: calc(100% - 8px);
+        width: 100%;
         margin: 4px;
         background: var(--inlay-color);
         overflow-y: scroll;

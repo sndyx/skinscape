@@ -1,9 +1,6 @@
 <script>
     import * as THREE from "three";
     import Editor from "$lib/editor/Editor.svelte";
-    import FileMenu from "$lib/FileMenu.svelte";
-    import EditMenu from "$lib/EditMenu.svelte";
-    import Menu from "$lib/Menu.svelte";
     import Toolbar from "$lib/editor/Toolbar.svelte";
     import { onMount } from "svelte";
     import Header from "../../lib/editor/Header.svelte";
@@ -90,11 +87,9 @@
     <Header />
 
     <div class="center-panel">
+        <ConfigBar />
         <div class="workspace">
-            <ConfigBar />
             <div class="editors" bind:this={element}></div>
-        </div>
-        <div class="tool-bar">
             <Toolbar />
         </div>
     </div>
@@ -124,6 +119,7 @@
     .center-panel {
         flex: 1;
         display: flex;
+        flex-direction: column;
         background-color: var(--main-color);
     }
 
@@ -131,7 +127,9 @@
         flex: 1;
         height: 100%;
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
+        gap: 12px;
+        padding: 0 12px 12px 12px;
     }
 
     .editors {
@@ -139,15 +137,6 @@
         height: 100%;
         display: flex;
         flex-direction: row;
-    }
-
-    .tool-bar {
-        width: 44px;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .tool-bar svg {
-        fill: red;
+        gap: 12px;
     }
 </style>

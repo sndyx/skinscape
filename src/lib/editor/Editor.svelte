@@ -6,6 +6,7 @@
     import { onMount,  } from "svelte";
     import UPNG from "upng-js";
     import { get } from "svelte/store";
+    import Toolbar from "$lib/editor/Toolbar.svelte";
 
     export let renderer;
 
@@ -36,12 +37,6 @@
 
     function mousedown(event) {
         activeEditor.set(eid);
-        // Mandatory for now, prevents bug related to selection getting scene OrbitControls stuck
-        // Seems more related to canvas than THREE.js as it has happened on the color picker as well
-        (window.getSelection
-            ? window.getSelection()
-            : document.selection
-        ).empty();
 
         if (event.button === 0) {
             scene.raycaster.setFromCamera(scene.pointer, scene.camera);
@@ -139,8 +134,7 @@
         display: flex;
         flex-direction: column;
         width: 34px;
-        height: calc(100% - 12px);
-        padding: 0 12px 12px 12px;
+        gap: 12px;
     }
 
     .editor-sidebar:has(.picker-container) {
@@ -150,19 +144,20 @@
     }
 
     .palette-container {
-        height: 100%;
+        flex: 1;
+        display: flex;
+        flex-direction: row;
+        gap: 12px;
     }
 
     .picker-container {
-        height: calc(30% - 6px);
-        margin-top: 12px;
+        height: 25%;
+        aspect-ratio: 1 / 2;
         bottom: 0;
     }
 
     .center {
         flex: 5;
-        height: calc(100% - 12px);
-        padding-bottom: 12px;
     }
 
     .scene {
