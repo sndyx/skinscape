@@ -69,7 +69,7 @@
 
     p {
         font-family: "Silkscreen", serif;
-        color: var(--text-color);
+        color: var(--primary-text);
         margin: 0;
         padding: 0;
         user-select: none;

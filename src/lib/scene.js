@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { createModel } from "./util/models.js";
-import { rgbaBlendNormal } from "./util/blending.js"
+import { rgbaBlendNormal } from "./util/blending.js";
 
 const CAMERA_POSITION = new THREE.Vector3(0, 0, 30);
 const CONTROLS_TARGET = new THREE.Vector3(0, 0, 0);
@@ -44,7 +44,6 @@ export class Scene {
 
         this.toggleGridlines(false);
         this.toggleOverlay(false);
-        // this.tool = new Pencil();
     }
 
     render() {

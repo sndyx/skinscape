@@ -3,6 +3,7 @@ import steve64 from '../models/steve64.json';
 import alex64 from '../models/alex64.json';
 
 import PencilConfig from "$lib/editor/config/PencilConfig.svelte";
+import FillConfig from "$lib/editor/config/FillConfig.svelte";
 
 const DIRECTIONS = ['right', 'left', 'top', 'bottom', 'front', 'back'];
 const DIRECTION_MAP = {
@@ -68,8 +69,8 @@ export class Pencil extends Tool {
 
     constructor() {
         super();
-        this.configComponent = PencilConfig
-        this.visited = new Set()
+        this.configComponent = PencilConfig;
+        this.visited = new Set();
     }
 
     hover(scene, x, y, color) {
@@ -81,7 +82,7 @@ export class Pencil extends Tool {
         if (this.visited.has([x, y].toString())) return;
         let layer = scene.activeLayer();
         layer.setPixel(x, y, color);
-        this.visited.add([x, y].toString())
+        this.visited.add([x, y].toString());
     }
 
     drag(scene, x, y, color) {
@@ -101,7 +102,7 @@ export class Eyedropper extends Tool {
 
     constructor() {
         super();
-        this.visited = new Set()
+        this.visited = new Set();
     }
 
     down(scene, x, y, color) {
@@ -114,6 +115,7 @@ export class Fill extends Tool {
 
     constructor() {
         super();
+        this.configComponent = FillConfig;
         this.tolerance = 0;
     }
 

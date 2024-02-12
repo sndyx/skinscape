@@ -15,7 +15,7 @@
     }
 
     let button = -1;
-    let pos = { x: 0, y: 0 }
+    let pos = { x: 0, y: 0 };
 
     $: if (rect !== undefined) {
         pos.x = rect.width * hsva.h / 360;

@@ -3,4 +3,5 @@
     import { tool } from "$lib/stores.js";
 </script>
 
-<ValueBar bind:value={$tool.size} min={1} max={10} suffix="px" />
+<span class="text">Tolerance:</span>
+<ValueBar bind:value={$tool.tolerance} min={0} max={100} />

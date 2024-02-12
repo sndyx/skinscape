@@ -1,7 +1,6 @@
 export function noSelect(node) {
 
     function mousedown() {
-        console.log("Mouse down!");
         window.addEventListener('mouseup', disableNoSelect);
         window.addEventListener('selectstart', disableSelect);
     }

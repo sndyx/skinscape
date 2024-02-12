@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import { Pencil } from "./tools.js";
+import {Fill, Pencil} from "./tools.js";
 
 export const preferences = writable({
     theme: 'light',
@@ -7,5 +7,5 @@ export const preferences = writable({
 });
 
 export const rgba = writable({ r: 0, g: 0, b: 0, a: 1 });
-export const tool = writable(new Pencil());
+export const tool = writable(new Fill());
 export const activeEditor = writable(0);
