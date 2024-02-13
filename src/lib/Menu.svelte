@@ -68,7 +68,8 @@
     }
 
     p {
-        font-family: "Silkscreen", serif;
+        font-family: LanaPixel, serif;
+        font-size: 18px;
         color: var(--primary-text);
         margin: 0;
         padding: 0;

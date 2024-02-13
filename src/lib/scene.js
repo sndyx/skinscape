@@ -65,6 +65,7 @@ export class Scene {
         this.renderer.render(this.scene, this.camera);
 
         this.texture.needsUpdate = true; // Wah wah
+        // ^^^ I am NOT happy that I had to do this, but it sometimes misses updates otherwise
     }
 
     updatePointer(x, y) {
@@ -89,7 +90,7 @@ export class Scene {
     toggleGridlines(enabled) {
         this.gridlines = enabled;
         let layer = 2;
-        if (this.overlay) {layer = 3; }
+        if (this.overlay) { layer = 3; }
         if (enabled) {
             this.camera.layers.enable(layer);
         } else {
@@ -115,9 +116,10 @@ export class Scene {
     }
 
     updatePixel(pos) {
-        let color = this.layers[0].getPixelByPos(pos);
-        for (let i = 1; i < this.layers.length; i++) {
+        let color = { r: 0, g: 0, b: 0, a: 0 };
+        for (let i = 0; i < this.layers.length; i++) {
             const l = this.layers[i];
+            if (!l.isActive) continue; // Skip hidden layers
             const c = l.getPixelByPos(pos);
             if (c.a === 255) { // Alpha already transformed to 0-255 by layer
                 color = c;

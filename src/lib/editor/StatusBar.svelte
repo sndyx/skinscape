@@ -13,6 +13,9 @@
     </div>
     <div class="status-bar-right">
         <p class="status-text text">
+            {$_('editor.models.slim')}
+        </p>
+        <p class="status-text text">
             64x64
         </p>
     </div>
@@ -21,9 +24,9 @@
 <style>
     .status-bar {
         height: 22px;
-        padding: 2px 20px;
+        padding: 2px 16px;
         display: flex;
-        background-color: var(--status-line);
+        background-color: var(--secondary-color);
     }
 
     .status-bar-left {
@@ -42,8 +45,8 @@
 
     .status-text {
         font-family: LanaPixel, serif;
-        font-size: 22px;
+        font-size: 18px;
         margin: 0;
-        color: var(--text-color);
+        color: var(--primary-text);
     }
 </style>

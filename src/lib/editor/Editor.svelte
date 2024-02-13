@@ -48,7 +48,7 @@
                 mouseDown = true;
                 scene.controls.enabled = false;
                 const x = Math.ceil(intersects[0].uv.x * 64); // Why ceil? IDK LOL
-                const y = Math.floor((1 - intersects[0].uv.y) * 64 + 2); // Why +2? IDK LOL
+                const y = Math.floor((1 - intersects[0].uv.y) * 64); // Why +2? IDK LOL
                 let color = get(rgba);
                 get(tool).down(scene, x, y, color);
             }
@@ -70,7 +70,7 @@
         );
         if (intersects.length > 0) {
             const x = Math.ceil(intersects[0].uv.x * 64);
-            const y = Math.floor((1 - intersects[0].uv.y) * 64 + 2);
+            const y = Math.floor((1 - intersects[0].uv.y) * 64);
             let color = get(rgba);
             if (mouseDown) {
                 get(tool).drag(scene, x, y, color);

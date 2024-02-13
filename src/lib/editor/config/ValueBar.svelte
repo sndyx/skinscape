@@ -36,7 +36,6 @@
     function updateValue(clientX) {
         value = Math.round(width / rect.width * (max - min)) + 1;
         width = Math.floor(Math.min(rect.width, Math.max(0, clientX - rect.left)) / 2) * 2;
-        console.log(width);
     }
 
     function contextmenu(event) {

@@ -1,4 +1,7 @@
 {
+  "credits": [
+    "Alexander Capitos"
+  ],
   "editor": {
     "header": {
       "file": "File",
@@ -18,6 +21,10 @@
         "name": "Fill",
         "tolerance": "Tolerance:"
       }
+    },
+    "models": {
+      "slim": "Slim",
+      "classic": "Classic"
     },
     "untitled-skin": "Untitled Skin",
     "layer": "Layer"

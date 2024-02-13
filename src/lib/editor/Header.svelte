@@ -1,6 +1,4 @@
 <script>
-import EditMenu from "../EditMenu.svelte";
-import FileMenu from "../FileMenu.svelte";
 import Menu from "../Menu.svelte";
 
 import { _ } from "svelte-i18n";
@@ -8,8 +6,8 @@ import { _ } from "svelte-i18n";
 
 <div class="header">
     <div class="header-left">
-        <FileMenu />
-        <EditMenu />
+        <Menu label={$_('editor.header.file')} />
+        <Menu label={$_('editor.header.edit')} />
         <Menu label={$_('editor.header.view')}></Menu>
         <Menu label={$_('editor.header.color')}></Menu>
     </div>
@@ -38,7 +36,7 @@ import { _ } from "svelte-i18n";
 
 <style>
     .header {
-        background-color: var(--header-color);
+        background-color: var(--secondary-color);
         display: flex;
         justify-content: space-between;
         width: 100%;
