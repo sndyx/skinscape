@@ -1,13 +1,25 @@
 {
   "editor": {
     "header": {
-      "file": "",
-      "edit": "",
-      "view": "",
-      "color": "",
-      "login": ""
+      "file": "ファイル",
+      "edit": "編集",
+      "view": "表示",
+      "color": "カラー",
+      "login": "ログイン"
     },
-    "untitled-skin": "",
-    "layer": ""
+    "tools": {
+      "pencil": {
+        "name": "鉛筆"
+      },
+      "eyedropper": {
+        "name": "スポイト"
+      },
+      "fill": {
+        "name": "塗りつぶし",
+        "tolerance": "許容範囲:"
+      }
+    },
+    "untitled-skin": "名前なしスキン",
+    "layer": "レイヤー"
   }
 }

@@ -1,0 +1,25 @@
+{
+  "editor": {
+    "header": {
+      "file": "文件",
+      "edit": "编辑",
+      "view": "视图",
+      "color": "颜色",
+      "login": "登录"
+    },
+    "tools": {
+      "pencil": {
+        "name": "铅笔"
+      },
+      "eyedropper": {
+        "name": "吸管"
+      },
+      "fill": {
+        "name": "填充",
+        "tolerance": "容差:"
+      }
+    },
+    "untitled-skin": "未命名皮肤",
+    "layer": "图层"
+  }
+}

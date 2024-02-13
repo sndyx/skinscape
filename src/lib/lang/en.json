@@ -7,6 +7,18 @@
       "color": "Color",
       "login": "Login"
     },
+    "tools": {
+      "pencil": {
+        "name": "Pencil"
+      },
+      "eyedropper": {
+        "name": "Eyedropper"
+      },
+      "fill": {
+        "name": "Fill",
+        "tolerance": "Tolerance:"
+      }
+    },
     "untitled-skin": "Untitled Skin",
     "layer": "Layer"
   }
