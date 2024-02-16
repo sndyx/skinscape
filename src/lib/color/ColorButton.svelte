@@ -44,7 +44,7 @@
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
-    class="color-button"
+    class="color-button border"
     style="--color: {hex}; --inverted: {inverted}; --solid: {solid};"
     on:click={click}
 >
@@ -67,13 +67,9 @@
         display: flex;
         align-items: center;
         width: var(--width);
-		height: var(--height);
-        margin: 6px;
+        height: var(--height);
         white-space: nowrap;
         background: repeating-conic-gradient(#ccc 0% 25%, #fff 0% 50%) 50% / 20px 20px;
-        box-shadow: 2px 0 0 0 var(--border-dark), -2px 0 0 0 var(--border-dark), 0 2px 0 0 var(--border-dark), 0 -2px 0 0 var(--border-dark),
-                    0 0 0 2px var(--border-light), 4px 0 0 0 var(--border-light), -4px 0 0 0 var(--border-light), 0 4px 0 0 var(--border-light), 0 -4px 0 0 var(--border-color),
-                    0 0 0 4px var(--border-dark), -4px 0 0 2px var(--border-dark), 4px 0 0 2px var(--border-dark), 0 4px 0 2px var(--border-dark), 0 -4px 0 2px var(--border-dark);
     }
 
     .color-button:before {

@@ -1,9 +1,9 @@
 <script>
     import ColorPicker from "../color/ColorPicker.svelte";
     import Palette from "../color/Palette.svelte";
-    import { rgba, tool, activeEditor } from '../stores.js';
+    import { rgba, tool, activeEditor, eyedropper, pencil } from '../stores.js';
     import { Scene } from "../scene.js";
-    import { onMount,  } from "svelte";
+    import { onMount } from "svelte";
     import UPNG from "upng-js";
     import { get } from "svelte/store";
     import Toolbar from "$lib/editor/Toolbar.svelte";
@@ -18,10 +18,25 @@
     let sceneElement;
     let scene;
 
+    const keybinds = new Map();
+
     function init() {
         scene = new Scene(renderer, sceneElement);
         scene.setModel("alex");
-        // setSkin("sourgummmybears");
+        setSkin("sourgummmybears");
+
+        keybinds.set('o', () => {
+            scene.toggleOverlay(!scene.overlay);
+        })
+        keybinds.set('g', () => {
+            scene.toggleGridlines(!scene.gridlines);
+        })
+        keybinds.set('i', () => {
+            tool.set(eyedropper);
+        })
+        keybinds.set('b', () => {
+            tool.set(pencil);
+        })
     }
 
     onMount(init);
@@ -96,11 +111,11 @@
 
     function keydown(event) {
         if (get(activeEditor) === eid) {
-            if (event.key === "g") {
-                scene.toggleGridlines(!scene.gridlines);
-            } else if (event.key === "o") {
-                scene.toggleOverlay(!scene.overlay);
-            }
+            keybinds.forEach((f, key) => {
+                if (key === event.key) {
+                    f();
+                }
+            })
         }
     }
 </script>
@@ -120,7 +135,7 @@
 <div class="center">
     <!-- svelte-ignore a11y-no-static-element-interactions -->
     <div
-        class="scene"
+        class="scene border"
         bind:this={sceneElement}
         on:mousedown={mousedown}
         on:mousemove={mousemove}
@@ -163,28 +178,12 @@
 
     .center {
         flex: 5;
+        display: flex;
     }
 
     .scene {
         position: relative;
-        width: calc(100% - 12px);
-        height: calc(100% - 12px);
-        margin: 6px;
+        flex: 1;
         background: var(--scene-color, var(--inlay-color));
-        box-shadow:
-            2px 0 0 0 var(--border-dark),
-            -2px 0 0 0 var(--border-dark),
-            0 2px 0 0 var(--border-dark),
-            0 -2px 0 0 var(--border-dark),
-            0 0 0 2px var(--border-light),
-            4px 0 0 0 var(--border-light),
-            -4px 0 0 0 var(--border-light),
-            0 4px 0 0 var(--border-light),
-            0 -4px 0 0 var(--border-color),
-            0 0 0 4px var(--border-dark),
-            -4px 0 0 2px var(--border-dark),
-            4px 0 0 2px var(--border-dark),
-            0 4px 0 2px var(--border-dark),
-            0 -4px 0 2px var(--border-dark);
     }
 </style>

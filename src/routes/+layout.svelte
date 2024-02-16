@@ -44,6 +44,7 @@
         -ms-user-select: none; /* IE10+ */
         user-select: none;
     }
+
     :global(.text) {
         -webkit-user-select: auto;
         -moz-user-select: auto;
@@ -53,5 +54,29 @@
         /* Try to fix blurry fonts on Windows */
         -webkit-font-smoothing: subpixel-antialiased;
         -moz-osx-font-smoothing: grayscale;
+    }
+
+    :global(.border) {
+        margin: 6px;
+        box-shadow:
+                2px 0 0 0 var(--border-dark),
+                -2px 0 0 0 var(--border-dark),
+                0 2px 0 0 var(--border-dark),
+                0 -2px 0 0 var(--border-dark),
+                0 0 0 2px var(--border-light),
+                4px 0 0 0 var(--border-light),
+                -4px 0 0 0 var(--border-light),
+                0 4px 0 0 var(--border-light),
+                0 -4px 0 0 var(--border-color),
+                0 0 0 4px var(--border-dark),
+                -4px 0 0 2px var(--border-dark),
+                4px 0 0 2px var(--border-dark),
+                0 4px 0 2px var(--border-dark),
+                0 -4px 0 2px var(--border-dark);
+    }
+
+    :global(.border-small) {
+        margin: 4px;
+        box-shadow: 2px 0 0 0 var(--border-dark), -2px 0 0 0 var(--border-dark), 0 2px 0 0 var(--border-dark), 0 -2px 0 0 var(--border-dark), 0 0 0 2px var(--border-color), 4px 0 0 0 var(--border-color), -4px 0 0 0 var(--border-color), 0 4px 0 0 var(--border-light), 0 -4px 0 0 var(--border-color);
     }
 </style>

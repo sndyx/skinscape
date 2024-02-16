@@ -5,7 +5,7 @@
     export let palette;
 </script>
 
-<div class="palette">
+<div class="palette border-small">
     {#each palette as color}
         <Color bind:rgba color={color} />
     {/each}
@@ -18,10 +18,8 @@
         align-content: flex-start;
         position: relative;
         width: 100%;
-        margin: 4px;
         background: var(--inlay-color);
         overflow-y: scroll;
-        box-shadow: 2px 0 0 0 var(--border-dark), -2px 0 0 0 var(--border-dark), 0 2px 0 0 var(--border-dark), 0 -2px 0 0 var(--border-dark), 0 0 0 2px var(--border-color), 4px 0 0 0 var(--border-color), -4px 0 0 0 var(--border-color), 0 4px 0 0 var(--border-light), 0 -4px 0 0 var(--border-color);
     }
 
     .palette {

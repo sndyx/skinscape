@@ -5,7 +5,6 @@
 </script>
 
 <div class="config-bar">
-    <Button />
     <svelte:component this={get(tool).configComponent} />
 </div>
 

@@ -61,7 +61,10 @@ import { _ } from "svelte-i18n";
 
     .logo {
         font-family: 'Silkscreen', serif;
-
+        text-shadow: 2px 0 0 var(--border-dark),
+        -2px 0 0 var(--border-dark),
+        0 2px 0 var(--border-dark),
+        0 -2px 0 var(--border-dark);
     }
 
     .header-right {

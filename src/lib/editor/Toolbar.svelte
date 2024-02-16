@@ -4,6 +4,7 @@ import Button from "$lib/common/Button.svelte";
 
 <div class="toolbar">
     <Button svg="/icons/eyedropper.svg" />
+    <Button svg="/icons/pencil.svg" />
 </div>
 
 <style>
