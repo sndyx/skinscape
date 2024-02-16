@@ -25,6 +25,7 @@ export class Scene {
         this.controls.rotateSpeed = 2;
         this.controls.maxDistance = 200;
         this.controls.minDistance = 10;
+        this.elapsedTime = 0;
 
         this.layers = [new Layer(this, 'default')];
         this.layer = 0;
@@ -51,21 +52,62 @@ export class Scene {
         this.deltaTime = this.clock.getDelta();
         this.elapsedTime += this.deltaTime;
         if (this.elapsedTime > 1 / MAX_FPS) {
-            // if (smoothReset) doSmoothReset()
+            if (this.smoothReset) this.doSmoothReset()
             this.controls.update();
             this.elapsedTime %= 1 / MAX_FPS;
         }
 
         const rect = this.element.getBoundingClientRect();
-        this.renderer.setViewport(rect.left, rect.top, rect.width, rect.height);
-        this.renderer.setScissor(rect.left, rect.top, rect.width, rect.height);
+        // Use window.innerHeight - rect.bottom because y is px from bottom
+        this.renderer.setViewport(rect.x, window.innerHeight - rect.bottom, rect.width, rect.height);
+        this.renderer.setScissor(rect.x, window.innerHeight - rect.bottom, rect.width, rect.height);
         this.camera.aspect = rect.width / rect.height;
         this.camera.updateProjectionMatrix();
 
         this.renderer.render(this.scene, this.camera);
 
         this.texture.needsUpdate = true; // Wah wah
-        // ^^^ I am NOT happy that I had to do this, but it sometimes misses updates otherwise
+        // ^^^ I am NOT happy that I had to do this, but it sometimes misses updates otherwise I think?
+    }
+
+    resetCameraPosition() {
+        this.smoothReset = true;
+    }
+
+    resetControls() {
+        this.controls.minAzimuthAngle = -Infinity;
+        this.controls.maxAzimuthAngle = Infinity;
+        this.controls.minPolarAngle = 0;
+        this.controls.maxPolarAngle = Math.PI;
+        this.controls.minDistance = 10;
+        this.controls.maxDistance = 200;
+        this.smoothReset = false;
+    }
+
+    doSmoothReset() {
+        // get current angles
+        let alpha = this.controls.getAzimuthalAngle(),
+            beta = this.controls.getPolarAngle() - Math.PI / 2,
+            gamma = this.controls.getDistance() - 30,
+            delta = this.camera.position.distanceTo(CAMERA_POSITION);
+
+        // if they are close to the reset values, just set these values
+        if (Math.abs(alpha) < 0.001) alpha = 0;
+        if (Math.abs(beta) < 0.001) beta = 0;
+        if (Math.abs(gamma) < 0.001) gamma = 0;
+
+        // smooth change using manual lerp
+        this.controls.minAzimuthAngle = 0.82*alpha;
+        this.controls.maxAzimuthAngle = this.controls.minAzimuthAngle;
+
+        this.controls.minPolarAngle = Math.PI/2 + 0.82*beta;
+        this.controls.maxPolarAngle = this.controls.minPolarAngle;
+
+        this.controls.minDistance = 30 + 0.82*gamma;
+        this.controls.maxDistance = this.controls.minDistance;
+
+        // if the reset values are reached, exit smooth reset
+        if(alpha === 0 && beta === 0 && gamma === 0) this.resetControls()
     }
 
     updatePointer(x, y) {
@@ -74,7 +116,7 @@ export class Scene {
     }
 
     toggleOverlay(enabled) {
-        let gridlines = this.gridlines; // save gridlines toggle
+        let gridlines = this.gridlines; // save gridlines state
         this.toggleGridlines(false); // disable currently active gridlines
         this.overlay = enabled;
         if (enabled) {

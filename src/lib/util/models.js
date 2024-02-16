@@ -18,7 +18,7 @@ const DESCRIPTORS = {
     'steve': steve64,
     'alex': alex64
 };
-const Y_OFFSET = 0; // Moves model to center of camera (moving camera instead centers model weirdly)
+const Y_OFFSET = 1.5; // Moves model to center of camera (moving camera instead centers model weirdly)
 
 export function createModel(type, texture) {
     const descriptor = DESCRIPTORS[type];

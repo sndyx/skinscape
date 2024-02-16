@@ -49,5 +49,9 @@
         -moz-user-select: auto;
         -ms-user-select: auto;
         user-select: auto;
+
+        /* Try to fix blurry fonts on Windows */
+        -webkit-font-smoothing: subpixel-antialiased;
+        -moz-osx-font-smoothing: grayscale;
     }
 </style>

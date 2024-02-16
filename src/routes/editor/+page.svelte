@@ -41,7 +41,7 @@
     let prevTime = performance.now();
 
     function render() {
-        frames ++;
+        frames++;
         const time = performance.now();
 
         if (time >= prevTime + 1000) {

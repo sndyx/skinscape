@@ -39,18 +39,23 @@
         activeEditor.set(eid);
 
         if (event.button === 0) {
-            scene.raycaster.setFromCamera(scene.pointer, scene.camera);
-            const intersects = scene.raycaster.intersectObjects(
-                scene.scene.children,
-                true,
-            );
-            if (intersects.length > 0) {
-                mouseDown = true;
-                scene.controls.enabled = false;
-                const x = Math.ceil(intersects[0].uv.x * 64); // Why ceil? IDK LOL
-                const y = Math.floor((1 - intersects[0].uv.y) * 64); // Why +2? IDK LOL
-                let color = get(rgba);
-                get(tool).down(scene, x, y, color);
+            if (event.detail === 2) {
+                scene.resetCameraPosition();
+            }
+            else {
+                scene.raycaster.setFromCamera(scene.pointer, scene.camera);
+                const intersects = scene.raycaster.intersectObjects(
+                    scene.scene.children,
+                    true,
+                );
+                if (intersects.length > 0) {
+                    mouseDown = true;
+                    scene.controls.enabled = false;
+                    const x = Math.ceil(intersects[0].uv.x * 64); // Why ceil? IDK LOL
+                    const y = Math.floor((1 - intersects[0].uv.y) * 64); // Why +2? IDK LOL
+                    let color = get(rgba);
+                    get(tool).down(scene, x, y, color);
+                }
             }
         }
     }
