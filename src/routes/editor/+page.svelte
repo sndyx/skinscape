@@ -73,6 +73,7 @@
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
         addEditor();
+        addEditor();
         resize();
         render();
     });

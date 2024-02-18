@@ -1,4 +1,4 @@
-import { rgba } from "./stores.js";
+import {rgba, tool, tools} from "./stores.js";
 import steve64 from '../models/steve64.json';
 import alex64 from '../models/alex64.json';
 
@@ -71,11 +71,12 @@ export class Pencil extends Tool {
         super();
         this.configComponent = PencilConfig;
         this.visited = new Set();
+        this.size = 1;
     }
 
     hover(scene, x, y, color) {
-        // let layer = scene.tempLayer();
-        // layer.setPixel(x, y, primary);
+        let layer = scene.tempLayer();
+        layer.setPixel(x, y, color);
     }
 
     down(scene, x, y, color) {
@@ -106,7 +107,10 @@ export class Eyedropper extends Tool {
     }
 
     down(scene, x, y, color) {
-        rgba.set(scene.activeLayer().getPixel(x, y));
+        let c = scene.activeLayer().getPixel(x, y);
+        c.a /= 255;
+        rgba.set(c);
+        tool.set(this.previous); // Return to previously used tool
     }
 
 }

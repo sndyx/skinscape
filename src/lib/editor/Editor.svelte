@@ -1,12 +1,11 @@
 <script>
     import ColorPicker from "../color/ColorPicker.svelte";
     import Palette from "../color/Palette.svelte";
-    import { rgba, tool, activeEditor, eyedropper, pencil } from '../stores.js';
+    import {rgba, tool, activeEditor, tools} from '../stores.js';
     import { Scene } from "../scene.js";
     import { onMount } from "svelte";
-    import UPNG from "upng-js";
     import { get } from "svelte/store";
-    import Toolbar from "$lib/editor/Toolbar.svelte";
+    import UPNG from "upng-js";
 
     export let renderer;
 
@@ -18,6 +17,8 @@
     let sceneElement;
     let scene;
 
+    let cursorElement;
+
     const keybinds = new Map();
 
     function init() {
@@ -27,15 +28,24 @@
 
         keybinds.set('o', () => {
             scene.toggleOverlay(!scene.overlay);
-        })
+        });
         keybinds.set('g', () => {
             scene.toggleGridlines(!scene.gridlines);
-        })
+        });
         keybinds.set('i', () => {
-            tool.set(eyedropper);
-        })
+            tools.eyedropper.previous = get(tool);
+            tool.set(tools.eyedropper);
+        });
         keybinds.set('b', () => {
-            tool.set(pencil);
+            tool.set(tools.pencil);
+        });
+
+        tool.subscribe((t) => {
+            if (t === tools.pencil) {
+                sceneElement.style.cursor = "none";
+            } else {
+                sceneElement.style.cursor = "url('/icons/eyedropper@2x.png') 0 24, auto";
+            }
         })
     }
 
@@ -78,6 +88,11 @@
     let mouseDown = false;
 
     function mousemove(event) {
+        scene.tempLayer().clear();
+
+        cursorElement.style.left = event.clientX - 12 + 'px';
+        cursorElement.style.top = event.clientY - 12 + 'px';
+
         let rect = sceneElement.getBoundingClientRect();
         scene.updatePointer(
             ((event.clientX - rect.left) / sceneElement.clientWidth) * 2 - 1,
@@ -118,9 +133,20 @@
             })
         }
     }
+
+    let isMouseOver = false;
+    function mouseover() {
+        isMouseOver = true;
+    }
+
+    function mouseleave() {
+        isMouseOver = false;
+    }
 </script>
 
 <svelte:window on:keydown={keydown} />
+
+<div bind:this={cursorElement} class="cursor" class:active={$tool === tools.pencil && isMouseOver}></div>
 
 <div class="editor-sidebar">
     <div class="palette-container">
@@ -140,6 +166,8 @@
         on:mousedown={mousedown}
         on:mousemove={mousemove}
         on:mouseup={mouseup}
+        on:mouseover={mouseover}
+        on:mouseleave={mouseleave}
     >
         <!---
         <div class="part-toggle">
@@ -150,6 +178,21 @@
 </div>
 
 <style>
+    .cursor {
+        position: absolute;
+        background-image: url('/icons/crosshair@2x.png');
+        display: none;
+        width: 24px;
+        height: 24px;
+        z-index: 999;
+        pointer-events: none;
+        mix-blend-mode: difference;
+    }
+
+    .active {
+        display: block;
+    }
+
     .editor-sidebar {
         display: flex;
         flex-direction: column;

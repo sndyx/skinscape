@@ -25,12 +25,15 @@
 
     function mousedown(event) {
         button = event.button;
-        if (button !== -1) updateHue(event.clientX, event.clientY);
+        if (button !== -1) {
+            document.getElementById("cursor-overlay").style.display = "block";
+            updateHue(event.clientX, event.clientY);
+        }
     }
 
     function mouseup(event) {
         if (button === event.button) {
-            document.getElementsByTagName("body")[0].style.cursor = "";
+            document.getElementById("cursor-overlay").style.display = "none";
             button = -1;
         }
     }
@@ -81,6 +84,7 @@
                     linear-gradient(0.25turn, #ffffffff, #00000000), var(--color);
 		outline: none;
 		user-select: none;
+        cursor: url('/icons/eyedropper@2x.png') 0 24, auto;
 	}
 
     .picker:before {

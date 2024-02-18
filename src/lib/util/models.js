@@ -89,7 +89,7 @@ export function createModel(type, texture) {
     return group;
 }
 
-class GridFace extends THREE.LineSegments {
+class GridFace extends THREE.Group {
 
     constructor(width, height, layer) {
         super();

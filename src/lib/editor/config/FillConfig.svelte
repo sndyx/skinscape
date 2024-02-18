@@ -8,4 +8,4 @@
 
 <Button></Button>
 <Label label={$_("editor.tools.fill.tolerance")} />
-<ValueBar bind:value={$tool.tolerance} min={0} max={100} />
+<ValueBar bind:value={$tool.tolerance} min={1} max={100} suffix="%" />

@@ -46,12 +46,13 @@
     }
 
     :global(.text) {
-        -webkit-user-select: auto;
-        -moz-user-select: auto;
-        -ms-user-select: auto;
-        user-select: auto;
+        -webkit-user-select: text;
+        -moz-user-select: text;
+        -ms-user-select: text;
+        user-select: text;
 
-        /* Try to fix blurry fonts on Windows */
+        /* Try to fix blurry fonts */
+        text-rendering: optimizeLegibility;
         -webkit-font-smoothing: subpixel-antialiased;
         -moz-osx-font-smoothing: grayscale;
     }

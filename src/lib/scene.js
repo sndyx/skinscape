@@ -30,6 +30,8 @@ export class Scene {
         this.layers = [new Layer(this, 'default')];
         this.layer = 0;
 
+        this.temp = new TempLayer(this);
+
         this.data = new Uint8Array(64 * 64 * 4);
         this.texture = new THREE.DataTexture(this.data, 64, 64);
         this.texture.flipY = true;
@@ -42,6 +44,9 @@ export class Scene {
         this.clock = new THREE.Clock();
         this.raycaster = new THREE.Raycaster();
         this.pointer = new THREE.Vector2();
+
+        this.raycaster.layers.disable(2);
+        this.raycaster.layers.disable(3);
 
         this.toggleGridlines(false);
         this.toggleOverlay(false);
@@ -157,10 +162,19 @@ export class Scene {
         return this.layers[this.layer];
     }
 
+    tempLayer() {
+        return this.temp;
+    }
+
     updatePixel(pos) {
         let color = { r: 0, g: 0, b: 0, a: 0 };
-        for (let i = 0; i < this.layers.length; i++) {
-            const l = this.layers[i];
+        for (let i = 0; i < this.layers.length + 1; i++) {
+            let l;
+            if (i === this.layers.length) {
+                l = this.temp; // Use temp layer as last layer
+            } else {
+                l = this.layers[i];
+            }
             if (!l.isActive) continue; // Skip hidden layers
             const c = l.getPixelByPos(pos);
             if (c.a === 255) { // Alpha already transformed to 0-255 by layer
@@ -196,15 +210,39 @@ export class Layer {
         };
     }
 
-    setPixel(x, y, color) {
+    setPixel(x, y, color, blend = true) {
         let c = { r: color.r, g: color.g, b: color.b, a: Math.floor(color.a * 255) };
         const pos = (x * 4) + ((y * 64 - 1) * 4);
-        if (c.a !== 255) { // Mix colors if color is transparent
-            const current = this.getPixelByPos(pos);
-            c = rgbaBlendNormal(current, c);
+        if (blend) {
+            if (c.a !== 255) { // Mix colors if color is transparent
+                const current = this.getPixelByPos(pos);
+                c = rgbaBlendNormal(current, c);
+            }
         }
         this.data.set([c.r, c.g, c.b, c.a], pos);
         this.scene.updatePixel(pos);
+    }
+
+}
+
+// Layer impl optimizing fast removal of all pixels
+export class TempLayer extends Layer {
+
+    constructor(scene) {
+        super(scene, 'temp');
+        this.set = new Set();
+    }
+
+    setPixel(x, y, color, blend = true) {
+        this.set.add([x, y])
+        super.setPixel(x, y, color, blend);
+    }
+
+    clear() {
+        this.set.forEach((pos) => {
+            super.setPixel(pos[0], pos[1], {r: 0, g: 0, b: 0, a: 0}, false);
+        });
+        this.set.clear();
     }
 
 }

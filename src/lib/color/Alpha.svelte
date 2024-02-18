@@ -25,11 +25,17 @@
 
     function mousedown(event) {
         button = event.button;
-        if (button !== -1) updateAlpha(event.clientX);
+        if (button !== -1) {
+            document.getElementById("cursor-overlay").style.display = "block";
+            updateAlpha(event.clientX);
+        }
     }
 
     function mouseup(event) {
-        if (button === event.button) button = -1;
+        if (button === event.button) {
+            document.getElementById("cursor-overlay").style.display = "none";
+            button = -1;
+        }
     }
 
     function mousemove(event) {
@@ -72,6 +78,7 @@
         position: relative;
         flex: 1;
         background: repeating-conic-gradient(#ccc 0% 25%, #fff 0% 50%) 50% / 20px 20px;
+        cursor: url('/icons/eyedropper@2x.png') 0 24, auto;
     }
 
     .slider:before {

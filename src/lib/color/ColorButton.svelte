@@ -87,6 +87,7 @@
         overflow: hidden;
         color: var(--inverted);
         height: 100%;
+        cursor: url('/icons/input@2x.png') 12 12, auto;
     }
 
     span {

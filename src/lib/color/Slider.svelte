@@ -23,11 +23,17 @@
 
     function mousedown(event) {
         button = event.button;
-        if (button !== -1) updateHue(event.clientX);
+        if (button !== -1) {
+            document.getElementById("cursor-overlay").style.display = "block";
+            updateHue(event.clientX);
+        }
     }
 
     function mouseup(event) {
-        if (button === event.button) button = -1;
+        if (button === event.button) {
+            document.getElementById("cursor-overlay").style.display = "none";
+            button = -1;
+        }
     }
 
     function mousemove(event) {
@@ -70,6 +76,7 @@
         flex: 1;
         background: linear-gradient(to right, #ff0000, #ffff00 17.2%, #ffff00 18.2%, #00ff00 33.3%, #00ffff 49.5%, #00ffff 51.5%,
         #0000ff 67.7%, #ff00ff 83.3%, #ff0000);
+        cursor: url('/icons/eyedropper@2x.png') 0 24, auto;
     }
 
     .slider:before {

@@ -28,6 +28,9 @@
     }
 </script>
 
+<!-- full-screen cursor overlay, displayed when mouse down color picker elements -->
+<div id="cursor-overlay"></div>
+
 <div
     class="color-picker"
 >
@@ -44,6 +47,13 @@
 </div>
 
 <style>
+    #cursor-overlay {
+        position: absolute;
+        inset: 0;
+        display: none;
+        z-index: 2;
+        cursor: url('/icons/eyedropper@2x.png') 0 24, auto;
+    }
     .color-picker {
         position: relative;
         display: flex;

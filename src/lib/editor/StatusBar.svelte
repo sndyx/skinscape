@@ -23,8 +23,8 @@
 
 <style>
     .status-bar {
-        height: 22px;
-        padding: 2px 16px;
+        height: 26px;
+        padding: 0 16px;
         display: flex;
         background-color: var(--secondary-color);
     }
@@ -40,10 +40,12 @@
         flex: 1;
         display: flex;
         justify-content: right;
+        align-items: center;
         gap: 20px;
     }
 
     .status-text {
+        padding: 4px 0;
         font-family: LanaPixel, serif;
         font-size: 18px;
         margin: 0;

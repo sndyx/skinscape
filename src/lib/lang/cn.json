@@ -22,6 +22,10 @@
         "tolerance": "容差:"
       }
     },
+    "models": {
+      "slim": "纤细",
+      "classic": "经典"
+    },
     "untitled-skin": "未命名皮肤",
     "layer": "图层"
   }
