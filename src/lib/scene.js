@@ -192,7 +192,7 @@ export class Scene {
 export class Layer {
 
     constructor(scene, name) {
-        this.data = new Uint8Array(64 * 64 * 4);
+        this.data = new Uint8ClampedArray(64 * 64 * 4);
         this.scene = scene;
         this.name = name;
         this.isActive = true;

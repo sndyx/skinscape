@@ -6,6 +6,7 @@
     import { onMount } from "svelte";
     import { get } from "svelte/store";
     import UPNG from "upng-js";
+    import Layer from "./Layer.svelte";
 
     export let renderer;
 
@@ -174,6 +175,14 @@
             <PartToggle bind:bodyToggles />
         </div>
         -->
+
+        <div class="layers">
+            {#if scene}
+                {#each scene.layers as layer}
+                    <Layer layer={layer}></Layer>
+                {/each}
+            {/if}
+        </div>
     </div>
 </div>
 
