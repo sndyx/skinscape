@@ -25,7 +25,7 @@
     function init() {
         scene = new Scene(renderer, sceneElement);
         scene.setModel("alex");
-        setSkin("sourgummmybears");
+        // setSkin("sourgummmybears");
 
         keybinds.set('o', () => {
             scene.toggleOverlay(!scene.overlay);

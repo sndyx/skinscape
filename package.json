@@ -20,7 +20,9 @@
 	"type": "module",
 	"dependencies": {
 		"@sveltejs/vite-plugin-svelte": "^3.0.2",
+		"bcryptjs": "^2.4.3",
 		"colord": "^2.9.3",
+		"sqlite3": "^5.1.7",
 		"svelte-i18n": "^4.0.0",
 		"svelte-local-storage-store": "^0.6.4",
 		"three": "^0.160.1",

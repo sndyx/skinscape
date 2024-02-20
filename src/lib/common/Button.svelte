@@ -12,6 +12,7 @@
 <style>
     .button {
         aspect-ratio: 1/1;
+        max-height: 28px;
         margin: 6px 6px 10px;
     }
 

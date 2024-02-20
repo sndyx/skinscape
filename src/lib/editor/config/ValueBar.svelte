@@ -34,8 +34,8 @@
     }
 
     function updateValue(clientX) {
-        value = Math.round(width / rect.width * (max - min)) + 1;
-        width = Math.floor(Math.min(rect.width, Math.max(0, clientX - rect.left)) / 2) * 2;
+        value = Math.min(max, Math.max(min, Math.round(width / rect.width * (max - min)) + 1));
+        width = Math.round((clientX - rect.left) / rect.width * (max - min)) / (max - min) * rect.width;
     }
 
     function contextmenu(event) {
@@ -76,12 +76,12 @@
 
     .value-bar-inner {
         position: relative;
-        background-color: var(--secondary-color);
         height: 100%;
+        background-color: var(--secondary-color);
     }
 
     .value-bar-overlay {
-        position: relative;
+        position: fixed;
         inset: 0;
         z-index: 1;
     }
