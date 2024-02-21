@@ -25,14 +25,20 @@
     @font-face {
         font-family: 'Silkscreen';
         font-style: normal;
-        font-weight: 500;
+        font-weight: 100;
         src: url('/fonts/slkscr.woff2') format('woff')
     }
     @font-face {
         font-family: 'LanaPixel';
         font-style: normal;
-        font-weight: 500;
+        font-weight: 100;
         src: url('/fonts/LanaPixel.woff2') format('woff')
+    }
+    @font-face {
+        font-family: 'Unifont';
+        font-style: normal;
+        font-weight: 500;
+        src: url('/fonts/Unifont.woff2') format('woff')
     }
 
     :global(*) { /* Only works with :global despite being in a layout? */
