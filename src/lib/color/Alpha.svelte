@@ -78,7 +78,7 @@
         position: relative;
         flex: 1;
         background: repeating-conic-gradient(#ccc 0% 25%, #fff 0% 50%) 50% / 20px 20px;
-        cursor: url('/icons/eyedropper@2x.png') 0 24, auto;
+        cursor: url('/icons/eyedropper@2x.png') 0 23, auto;
     }
 
     .slider:before {

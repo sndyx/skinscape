@@ -1,28 +1,68 @@
 <script>
     let shown = true;
+    let register = false;
 
     function close() {
         shown = false;
     }
 </script>
 
+
+<!-- SHUT UP SHUT UP SHUT UP SHUT UP SHUT UP SHUT UP -->
+<!-- No Svelte, the drawing website is not accessible. Sorry. -->
+<!-- svelte-ignore a11y-no-static-element-interactions -->
+<!-- svelte-ignore a11y-click-events-have-key-events -->
 <div class="sign-in-overlay" class:active={shown} on:click={close}>
-    <div class="sign-in border-small">
-        <h1>Sign in</h1>
-        <p class="text">Sign in to access more features</p>
-        <input
-            class="text border"
-            spellcheck=false
-            maxLength="20"
-            placeholder="username"
-        />
-        <input
-            class="text border"
-            spellcheck=false
-            maxLength="20"
-            placeholder="password"
-        />
-        <p class="text link">Forgot password?</p>
+    <div class="sign-in border-small" on:click={(e) => {e.stopPropagation()}}>
+        {#if register}
+            <h1>Sign in</h1>
+            <p class="text">Sign in to access more features</p>
+            <form method="post" action="/login?/login">
+                <input
+                    name="username"
+                    spellcheck=false
+                    maxLength="29"
+                    placeholder="username"
+                    class="text border"
+                />
+                <input
+                    name="password"
+                    type="password"
+                    spellcheck=false
+                    maxLength="255"
+                    placeholder="password"
+                    class="text border"
+                />
+                <input type="submit" value="Submit">
+            </form>
+            <p class="text link">Forgot password?</p>
+        {:else}
+            <form method="post" action="/login?/register">
+                <input
+                        name="username"
+                        spellcheck=false
+                        maxLength="29"
+                        placeholder="username"
+                        class="text border"
+                />
+                <input
+                        name="password"
+                        type="password"
+                        spellcheck=false
+                        maxLength="255"
+                        placeholder="password"
+                        class="text border"
+                />
+                <input
+                        name="email"
+                        spellcheck=false
+                        maxLength="255"
+                        placeholder="email"
+                        class="text border"
+                />
+                <input type="submit" value="Submit">
+            </form>
+        {/if}
     </div>
 </div>
 
@@ -70,8 +110,8 @@
 
     input {
         z-index: 1;
-        font-family: 'Silkscreen', serif;
-        font-size: 14px;
+        font-family: 'Muncro', serif;
+        font-size: 20px;
         overflow: hidden;
         cursor: url('/icons/input@2x.png') 12 12, auto;
         border: none;
@@ -80,6 +120,9 @@
         color: var(--primary-text);
         width: calc(100% - 36px);
         margin: 16px 0;
+        -webkit-appearance: none;
+        appearance: none;
+        outline: none;
     }
 
     .link {
@@ -88,5 +131,9 @@
         float: left;
         width: 100%;
         margin: 10px 0;
+    }
+
+    input[type="password"] {
+        -webkit-text-security: square;
     }
 </style>

@@ -84,7 +84,7 @@
                     linear-gradient(0.25turn, #ffffffff, #00000000), var(--color);
 		outline: none;
 		user-select: none;
-        cursor: url('/icons/eyedropper@2x.png') 0 24, auto;
+        cursor: url('/icons/eyedropper@2x.png') 0 23, auto;
 	}
 
     .picker:before {

@@ -75,14 +75,6 @@
     }
 
     .value-bar-inner {
-        position: relative;
-        height: 100%;
         background-color: var(--secondary-color);
-    }
-
-    .value-bar-overlay {
-        position: fixed;
-        inset: 0;
-        z-index: 1;
     }
 </style>

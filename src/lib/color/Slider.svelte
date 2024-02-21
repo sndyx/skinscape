@@ -76,7 +76,7 @@
         flex: 1;
         background: linear-gradient(to right, #ff0000, #ffff00 17.2%, #ffff00 18.2%, #00ff00 33.3%, #00ffff 49.5%, #00ffff 51.5%,
         #0000ff 67.7%, #ff00ff 83.3%, #ff0000);
-        cursor: url('/icons/eyedropper@2x.png') 0 24, auto;
+        cursor: url('/icons/eyedropper@2x.png') 0 23, auto;
     }
 
     .slider:before {

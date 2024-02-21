@@ -52,7 +52,7 @@
         inset: 0;
         display: none;
         z-index: 2;
-        cursor: url('/icons/eyedropper@2x.png') 0 24, auto;
+        cursor: url('/icons/eyedropper@2x.png') 0 23, auto;
     }
     .color-picker {
         position: relative;
