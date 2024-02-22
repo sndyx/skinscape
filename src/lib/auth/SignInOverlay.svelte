@@ -5,6 +5,24 @@
     function close() {
         shown = false;
     }
+
+    function submit(event) {
+        const ACTION_URL = event.target.action;
+
+        const formData = new FormData(event.target);
+        const data = new URLSearchParams();
+        for (let field of formData) {
+            const [key, value] = field;
+            data.append(key, value);
+        }
+
+        fetch(ACTION_URL, {
+            method: 'POST',
+            body: data
+        }).then(async (res) => {
+            console.log(await res.json());
+        });
+    }
 </script>
 
 
@@ -14,10 +32,10 @@
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div class="sign-in-overlay" class:active={shown} on:click={close}>
     <div class="sign-in border-small" on:click={(e) => {e.stopPropagation()}}>
-        {#if register}
+        {#if !register}
             <h1>Sign in</h1>
             <p class="text">Sign in to access more features</p>
-            <form method="post" action="/login?/login">
+            <form method="post" action="/login?/login" on:submit|preventDefault={submit}>
                 <input
                     name="username"
                     spellcheck=false
@@ -37,7 +55,7 @@
             </form>
             <p class="text link">Forgot password?</p>
         {:else}
-            <form method="post" action="/login?/register">
+            <form method="post" action="/login?/register" on:submit|preventDefault={submit}>
                 <input
                         name="username"
                         spellcheck=false
@@ -108,6 +126,11 @@
         font-weight: 100;
     }
 
+    form {
+        padding: 0;
+        margin: 0;
+    }
+
     input {
         z-index: 1;
         font-family: 'Muncro', serif;
@@ -119,7 +142,7 @@
         padding: 12px 12px;
         color: var(--primary-text);
         width: calc(100% - 36px);
-        margin: 16px 0;
+        margin: 16px 6px;
         -webkit-appearance: none;
         appearance: none;
         outline: none;

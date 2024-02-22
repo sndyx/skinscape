@@ -1,34 +1,44 @@
-import { drizzle } from 'drizzle-orm/better-sqlite3';
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import Database from 'better-sqlite3';
 
-export const sqlite = new Database('test.db');
-export const db = drizzle(sqlite);
+export const db = new Database('test.db', { verbose: console.log });
+db.pragma('journal_mode = WAL');
 
-export const users = sqliteTable('users', {
-    id: text('id').notNull().primaryKey(),
-    username: text('username').notNull().unique(),
-    password: text('password').notNull(),
-    email: text('email').notNull().unique(),
-});
+db.exec(`
+CREATE TABLE IF NOT EXISTS user (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL
+);`);
 
-export const sessions = sqliteTable('sessions', {
-    id: text('id').notNull().primaryKey(),
-    expires_at: integer('expires_at').notNull(),
-    user_id: text('user_id').notNull().references(() => user.id),
-});
+db.exec(`
+CREATE TABLE IF NOT EXISTS session (
+    id TEXT NOT NULL PRIMARY KEY,
+    expires_at INTEGER NOT NULL,
+    user_id INTEGER UNIQUE NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES user(id)
+);`);
 
-export const profiles = sqliteTable('profiles', {
-    id: text('id').notNull().primaryKey(),
-    username: text('username').notNull().unique(),
-    display_name: text('display_name'),
-    display_skin: text('display_skin'),
-    skins: text('skins', { mode: 'json' }).notNull().default('[]'),
-    badges: text('badges', { mode: 'json' }).notNull().default('[]'),
-    favorites: text('favorites', { mode: 'json' }).notNull().default('[]'),
-});
+db.exec(`
+CREATE TABLE IF NOT EXISTS profile (
+    id INTEGER NOT NULL PRIMARY KEY,
+    username INTEGER UNIQUE NOT NULL,
+    join_date INTEGER NOT NULL,
+    display_name TEXT,
+    display_skin TEXT,
+    badges JSON DEFAULT('[]'),
+    skins JSON DEFAULT('[]'),
+    favorites JSON DEFAULT('[]')
+);`);
 
-export const skins = sqliteTable('skins', {
-    id: text('id').notNull().primaryKey(),
-    name: text('name').notNull(),
-});
+db.exec(`
+CREATE TABLE IF NOT EXISTS skin (
+    id TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL
+);`);
+
+db.exec(`
+CREATE TABLE IF NOT EXISTS analytics (
+    category TEXT NOT NULL PRIMARY KEY,
+    value INTEGER DEFAULT(0)
+);`);
