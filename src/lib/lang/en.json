@@ -32,7 +32,7 @@
   "auth": {
     "login": {
       "title": "Sign in",
-      "subtext": "Sign in to access more features",
+      "subtext": "Welcome back to skinscape",
       "form": {
         "username": "username",
         "password": "password",
@@ -68,6 +68,13 @@
         "email-invalid": "Invalid email",
         "email-already-exists": "Email already exists"
       }
+    }
+  },
+  "profile": {
+    "flare": {
+      "dev": "DEV",
+      "mod": "MOD",
+      "patron": "♥♥♥"
     }
   }
 }
