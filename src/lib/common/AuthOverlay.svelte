@@ -3,9 +3,8 @@
     // Perhaps this should be refactored later...
     // jk
     import Button from "$lib/common/Button.svelte";
+    import { showAuthOverlay, updateProfile } from "$lib/stores.js";
     import { _ } from "svelte-i18n";
-
-    let shown = true;
 
     let registering = false;
 
@@ -26,7 +25,8 @@
         }).then(async (res) => {
             const json = await res.json();
             if (json["success"]) {
-                shown = false;
+                showAuthOverlay.set(false);
+                updateProfile();
             } else {
                 errorMessage = json["message"];
                 errorTarget = json["target"];
@@ -44,7 +44,8 @@
         }).then(async (res) => {
             const json = await res.json();
             if (json["success"]) {
-                shown = false; // Probably? Change this later
+                showAuthOverlay.set(false); // Probably? Change this later
+                updateProfile();
             } else {
                 errorMessage = json["message"];
                 errorTarget = json["target"];
@@ -56,19 +57,20 @@
         registering = !registering;
     }
 
-    export function show() {
-        errorTarget = undefined;
-        errorMessage = undefined;
-        registering = false;
-        shown = true;
-    }
+    showAuthOverlay.subscribe((value) => {
+        if (value) {
+            errorTarget = undefined;
+            errorMessage = undefined;
+            registering = false;
+        }
+    });
 
     function close() {
-        shown = false;
+        showAuthOverlay.set(false);
     }
 </script>
 
-<div class="auth-overlay" class:active={shown} on:click={close}>
+<div class="auth-overlay" class:active={$showAuthOverlay} on:click={close}>
     <div class="auth border" on:click|preventDefault={(e) => {e.stopPropagation()}}>
         {#if registering}
             <h1 class="text">{$_("auth.register.title")}</h1>
@@ -85,6 +87,7 @@
                         spellcheck=false
                         class="text border auth-input"
                         class:error={errorTarget === "username"}
+                        on:keydown={(e) => {e.stopPropagation()}}
                 />
                 <input
                         type="password"
@@ -93,6 +96,7 @@
                         spellcheck=false
                         class="text border auth-input"
                         class:error={errorTarget === "password"}
+                        on:keydown={(e) => {e.stopPropagation()}}
                 />
                 <input
                         type="email"
@@ -101,6 +105,7 @@
                         spellcheck=false
                         class="text border auth-input"
                         class:error={errorTarget === "email"}
+                        on:keydown={(e) => {e.stopPropagation()}}
                 />
                 <div class="button-container">
                     <Button text={$_("auth.register.form.submit")} on:mousedown={register} autoSelect={true}></Button>
@@ -125,6 +130,7 @@
                         spellcheck=false
                         class="text border auth-input"
                         class:error={errorTarget === "username"}
+                        on:keydown={(e) => {e.stopPropagation()}}
                 />
                 <input
                         type="password"
@@ -133,6 +139,7 @@
                         spellcheck=false
                         class="text border auth-input"
                         class:error={errorTarget === "password"}
+                        on:keydown={(e) => {e.stopPropagation()}}
                 />
                 <div class="auth-form-options">
                     <div class="auth-checkbox-container">

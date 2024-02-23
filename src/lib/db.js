@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS profile (
     username INTEGER UNIQUE NOT NULL,
     join_date INTEGER NOT NULL,
     display_name TEXT,
-    display_skin TEXT,
+    display_skin TEXT DEFAULT('/default.png'),
     badges JSON DEFAULT('[]'),
     skins JSON DEFAULT('[]'),
     favorites JSON DEFAULT('[]')

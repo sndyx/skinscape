@@ -56,6 +56,7 @@
         on:keyup={keyup} 
         on:focusout={focusout} 
         on:click={click}
+        on:keydown={(e) => {e.stopPropagation()}}
         spellcheck=false
         maxLength="8"
     />

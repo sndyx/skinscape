@@ -1,11 +1,16 @@
 <script lang="ts">
-    import { preferences } from '$lib/stores';
+    import { preferences, updateProfile } from '$lib/stores';
     import { get } from 'svelte/store';
+    import { onMount } from "svelte";
 
     let theme = get(preferences)['theme'];
 
     preferences.subscribe(value => {
         value.theme
+    })
+
+    onMount(() => {
+        updateProfile();
     })
 </script>
   

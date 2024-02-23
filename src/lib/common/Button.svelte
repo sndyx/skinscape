@@ -2,6 +2,7 @@
     // This is fine I think
     export let svg = undefined;
     export let text = undefined;
+    export let fontSize = "22px";
 
     export let autoSelect = false;
 
@@ -20,7 +21,7 @@
 
 <div class="button" class:active={isActive()} on:mousedown={mousedown} on:mousedown>
     {#if svg}<img src={svg}  alt="tool"/>{/if}
-    {#if text}<p class="button-text">{text}</p>{/if}
+    {#if text}<p class="button-text" style="font-size: {fontSize};">{text}</p>{/if}
 </div>
 
 <style>
@@ -55,7 +56,6 @@
     .button-text {
         color: var(--primary-text);
         font-family: LanaPixel, serif;
-        font-size: 22px;
         margin: 0;
     }
 

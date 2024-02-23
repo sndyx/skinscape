@@ -1,5 +1,6 @@
 <script>
 import Menu from "../Menu.svelte";
+import { profile, showAuthOverlay } from "$lib/stores.js";
 
 import { _ } from "svelte-i18n";
 </script>
@@ -25,12 +26,13 @@ import { _ } from "svelte-i18n";
         </div>
     </div>
     <div class="header-right">
-        <a href="/donate" class="heart">
-            <img alt="heart" src="/icons/heart.png" width="18" height="18" />
-        </a>
-        <div class="login">
-            <img alt="login" src="/icons/login.png" width="60" height="18" />
-        </div>
+        {#if $profile}
+            <div class="pfp"><img src={$profile.display_skin} width="32" height="32" alt="profile"></div>
+        {:else}
+            <div class="login" on:mousedown={() => {showAuthOverlay.set(true)}}>
+                <p class="login-text">{$_("editor.header.login")}</p>
+            </div>
+        {/if}
     </div>
 </div>
 
@@ -73,11 +75,20 @@ import { _ } from "svelte-i18n";
         justify-content: right;
     }
 
-    .heart {
+    .login {
+        background: var(--main-color);
+        margin: 4px 6px;
         padding: 2px;
     }
 
-    .login {
-        padding: 2px 10px;
+    .login-text {
+        font-family: LanaPixel, serif;
+        font-size: 18px;
+        color: var(--primary-text);
+        margin: 0;
+    }
+
+    .pfp {
+        margin: 0 16px;
     }
 </style>

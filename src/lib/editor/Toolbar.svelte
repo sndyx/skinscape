@@ -5,9 +5,15 @@ import {get} from "svelte/store";
 </script>
 
 <div class="toolbar">
-    <Button svg="/icons/pencil.svg" isActive={() => $tool === tools.pencil} on:mousedown={() => tool.set(tools.pencil)} />
-    <Button svg="/icons/eyedropper.svg" isActive={() => $tool === tools.eyedropper} on:mousedown={() => {tools.eyedropper.previous = get(tool); tool.set(tools.eyedropper)}} />
-    <Button svg="/icons/paint_bucket.svg" isActive={() => $tool === tools.fill} on:mousedown={() => tool.set(tools.fill)} />
+    <div class="button-container">
+        <Button svg="/icons/pencil.svg" isActive={() => $tool === tools.pencil} on:mousedown={() => tool.set(tools.pencil)} />
+    </div>
+    <div class="button-container">
+        <Button svg="/icons/eyedropper.svg" isActive={() => $tool === tools.eyedropper} on:mousedown={() => {tools.eyedropper.previous = get(tool); tool.set(tools.eyedropper)}} />
+    </div>
+    <div class="button-container">
+        <Button svg="/icons/paint_bucket.svg" isActive={() => $tool === tools.fill} on:mousedown={() => tool.set(tools.fill)} />
+    </div>
 </div>
 
 <style>
@@ -16,5 +22,9 @@ import {get} from "svelte/store";
         display: flex;
         flex-direction: column;
         gap: 4px;
+    }
+    .button-container {
+        width: 100%;
+        aspect-ratio: 1/1.2;
     }
 </style>

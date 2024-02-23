@@ -8,7 +8,7 @@
       "edit": "Edit",
       "view": "View",
       "color": "Color",
-      "login": "Login"
+      "login": "Sign in"
     },
     "tools": {
       "pencil": {
@@ -57,7 +57,7 @@
         "submit": "Create account"
       },
       "hint-text": "Already have an account?",
-      "hint-text-link": "Log in",
+      "hint-text-link": "Sign in",
       "error": {
         "username-too-short": "Username must be longer than 2 characters",
         "username-too-long": "Username must be shorter than 30 characters",
