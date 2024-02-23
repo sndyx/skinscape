@@ -62,10 +62,14 @@
         registering = false;
         shown = true;
     }
+
+    function close() {
+        shown = false;
+    }
 </script>
 
-<div class="auth-overlay" class:active={shown}>
-    <div class="auth border">
+<div class="auth-overlay" class:active={shown} on:click={close}>
+    <div class="auth border" on:click|preventDefault={(e) => {e.stopPropagation()}}>
         {#if registering}
             <h1 class="text">{$_("auth.register.title")}</h1>
             <p class="text">{$_("auth.register.subtext")}</p>
@@ -188,6 +192,7 @@
         font-family: Unifont, serif;
         font-size: 32px;
         font-weight: 100;
+        margin: 0;
     }
 
     p {
