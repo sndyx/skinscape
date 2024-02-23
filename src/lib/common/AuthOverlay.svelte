@@ -1,4 +1,7 @@
 <script>
+    // This whole component is straight dogshit 🔥🔥🔥
+    // Perhaps this should be refactored later...
+    // jk
     import Button from "$lib/common/Button.svelte";
     import { _ } from "svelte-i18n";
 
@@ -9,6 +12,11 @@
     let loginForm;
     let registerForm;
 
+    // Returned from API
+    // There has to be a better way to handle these... :(
+    let errorTarget;
+    let errorMessage;
+
     function login() {
         const username = loginForm.elements[0].value;
         const password = loginForm.elements[1].value;
@@ -16,7 +24,13 @@
         fetch(`/account/login?username=${username}&password=${password}`, {
             method: 'POST',
         }).then(async (res) => {
-            console.log(await res.json());
+            const json = await res.json();
+            if (json["success"]) {
+                shown = false;
+            } else {
+                errorMessage = json["message"];
+                errorTarget = json["target"];
+            }
         });
     }
 
@@ -28,12 +42,25 @@
         fetch(`/account/register?username=${username}&password=${password}&email=${email}`, {
             method: 'POST',
         }).then(async (res) => {
-            console.log(await res.json());
+            const json = await res.json();
+            if (json["success"]) {
+                shown = false; // Probably? Change this later
+            } else {
+                errorMessage = json["message"];
+                errorTarget = json["target"];
+            }
         });
     }
 
     function toggleMode() {
         registering = !registering;
+    }
+
+    export function show() {
+        errorTarget = undefined;
+        errorMessage = undefined;
+        registering = false;
+        shown = true;
     }
 </script>
 
@@ -42,12 +69,18 @@
         {#if registering}
             <h1 class="text">{$_("auth.register.title")}</h1>
             <p class="text">{$_("auth.register.subtext")}</p>
+            {#if errorMessage} <!-- This is bad. I don't like this. -->
+                <p class="error-text text">{$_(errorMessage)}</p>
+            {:else}
+                <div class="spacer"></div>
+            {/if}
             <form bind:this={registerForm} class="auth-form">
                 <input
                         placeholder={$_("auth.register.form.username")}
                         maxLength="29"
                         spellcheck=false
                         class="text border auth-input"
+                        class:error={errorTarget === "username"}
                 />
                 <input
                         type="password"
@@ -55,6 +88,7 @@
                         maxLength="255"
                         spellcheck=false
                         class="text border auth-input"
+                        class:error={errorTarget === "password"}
                 />
                 <input
                         type="email"
@@ -62,6 +96,7 @@
                         maxLength="255"
                         spellcheck=false
                         class="text border auth-input"
+                        class:error={errorTarget === "email"}
                 />
                 <div class="button-container">
                     <Button text={$_("auth.register.form.submit")} on:mousedown={register} autoSelect={true}></Button>
@@ -74,12 +109,18 @@
         {:else}
             <h1 class="text">{$_("auth.login.title")}</h1>
             <p class="text">{$_("auth.login.subtext")}</p>
+            {#if errorMessage} <!-- This is bad. I don't like this. -->
+                <p class="error-text text">{$_(errorMessage)}</p>
+            {:else}
+                <div class="spacer"></div>
+            {/if}
             <form bind:this={loginForm} class="auth-form">
                 <input
                         placeholder={$_("auth.login.form.username")}
                         maxLength="29"
                         spellcheck=false
                         class="text border auth-input"
+                        class:error={errorTarget === "username"}
                 />
                 <input
                         type="password"
@@ -87,6 +128,7 @@
                         maxLength="255"
                         spellcheck=false
                         class="text border auth-input"
+                        class:error={errorTarget === "password"}
                 />
                 <div class="auth-form-options">
                     <div class="auth-checkbox-container">
@@ -136,6 +178,11 @@
         padding: 30px;
     }
 
+    .error {
+        --border-color: var(--error-color);
+        --border-light: var(--error-color);
+    }
+
     h1 {
         color: var(--primary-text);
         font-family: Unifont, serif;
@@ -148,6 +195,17 @@
         font-family: LanaPixel, serif;
         font-size: 22px;
         font-weight: 100;
+    }
+
+    .error-text {
+        width: 100%;
+        font-size: 18px;
+        margin: 0;
+        color: var(--error-color);
+    }
+
+    .spacer {
+        height: 23px;
     }
 
     .auth-input {
