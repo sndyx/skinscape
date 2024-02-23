@@ -35,7 +35,7 @@
         {#if !register}
             <h1>Sign in</h1>
             <p class="text">Sign in to access more features</p>
-            <form method="post" action="/login?/login" on:submit|preventDefault={submit}>
+            <form method="POST" action="/login?/login" on:submit|preventDefault={submit}>
                 <input
                     name="username"
                     spellcheck=false
