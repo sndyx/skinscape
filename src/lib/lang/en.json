@@ -28,5 +28,46 @@
     },
     "untitled-skin": "Untitled Skin",
     "layer": "Layer"
+  },
+  "auth": {
+    "login": {
+      "title": "Sign in",
+      "subtext": "Sign in to access more features",
+      "form": {
+        "username": "username",
+        "password": "password",
+        "remember-me": "Remember me",
+        "forgot-password": "Forgot password?",
+        "submit": "Sign in"
+      },
+      "hint-text": "Don't have an account?",
+      "hint-text-link": "Register",
+      "error": {
+        "username-not-found": "Username not found",
+        "password-incorrect": "Password incorrect"
+      }
+    },
+    "register": {
+      "title": "Register",
+      "subtext": "Register to access more features",
+      "form": {
+        "username": "username",
+        "password": "password",
+        "email": "email",
+        "submit": "Create account"
+      },
+      "hint-text": "Already have an account?",
+      "hint-text-link": "Log in",
+      "error": {
+        "username-too-short": "Username must be longer than 2 characters",
+        "username-too-long": "Username must be shorter than 30 characters",
+        "username-not-alphanumeric": "Username must only contain letters, numbers, and underscores",
+        "username-already-exists": "Username already exists",
+        "password-too-short": "Password must be longer than 5 characters",
+        "password-too-long": "Password must be shorter than 256 characters",
+        "email-invalid": "Invalid email",
+        "email-already-exists": "Email already exists"
+      }
+    }
   }
 }

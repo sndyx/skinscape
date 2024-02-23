@@ -1,72 +1,54 @@
-import { error } from "@sveltejs/kit";
-import { db } from "$lib/db.js";
+import { error, json } from "@sveltejs/kit";
 import { Argon2id } from "oslo/password";
 import { lucia } from "$lib/auth.js";
+import { db } from "$lib/db.js";
 
-export async function load({ cookies, request }) {
-    const data = await request.formData();
-    const username = data.get("username");
-    const password = data.get("password");
-    const email = data.get("email");
+export async function POST({ url, cookies }) {
+    const username = url.searchParams.get("username");
+    const password = url.searchParams.get("password");
+    const email = url.searchParams.get("email");
 
-    console.log(username, password, email)
-
-    if (typeof username !== "string") {
+    if (username.length < 3) {
         error(400, {
             success: false,
             target: "username",
-            message: "Invalid username",
-        });
-    } else if (username.length < 3) {
-        error(400, {
-            success: false,
-            target: "username",
-            message: "Username must be longer than 2 characters",
+            message: "auth.register.error.username-too-short",
         });
     } else if (username.length > 29) {
         error(400, {
             success: false,
             target: "username",
-            message: "Username must be shorter than 30 characters"
+            message: "auth.register.error.username-too-long"
         })
     }  else if (!/^[a-zA-Z0-9_]+$/.test(username)) {
         error(400, {
             success: false,
             target: "username",
-            message: "Username must only contain letters, numbers, and underscores"
+            message: "auth.register.error.username-not-alphanumeric"
         })
     }
 
-    if (typeof password !== "string") {
+    if (password.length < 6) {
         error(400, {
             success: false,
             target: "password",
-            message: "Invalid password",
-        });
-    } else if (password.length < 6) {
-        error(400, {
-            success: false,
-            target: "password",
-            message: "Password must be longer than 5 characters",
+            message: "auth.register.error.password-too-short",
         });
     } else if (password.length > 255) {
         error(400, {
             success: false,
             target: "password",
-            message: "Password must be shorter than 256 characters",
+            message: "auth.register.error.password-too-long",
         });
     }
 
     if (
-        typeof email !== "string" ||
-        email.length < 3 ||
-        email.length > 31 ||
         !/^([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x22([^\x0d\x22\x5c\x80-\xff]|\x5c[\x00-\x7f])*\x22)(\x2e([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x22([^\x0d\x22\x5c\x80-\xff]|\x5c[\x00-\x7f])*\x22))*\x40([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x5b([^\x0d\x5b-\x5d\x80-\xff]|\x5c[\x00-\x7f])*\x5d)(\x2e([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x5b([^\x0d\x5b-\x5d\x80-\xff]|\x5c[\x00-\x7f])*\x5d))*$/.test(email)
     ) {
         error(400, {
             success: false,
             target: "email",
-            message: "Invalid email",
+            message: "auth.register.error.email-invalid",
         });
     }
 
@@ -76,7 +58,7 @@ export async function load({ cookies, request }) {
         error(400, {
             success: false,
             target: "username",
-            message: "Username already exists",
+            message: "auth.register.error.username-already-exists",
         });
     }
 
@@ -86,7 +68,7 @@ export async function load({ cookies, request }) {
         error(400, {
             success: false,
             target: 'email',
-            message: "Email already exists",
+            message: "auth.register.error.email-already-exists",
         });
     }
 
@@ -110,5 +92,5 @@ export async function load({ cookies, request }) {
         ...sessionCookie.attributes
     });
 
-    return { success: true };
+    return json({ success: true });
 }

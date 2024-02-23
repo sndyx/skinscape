@@ -6,7 +6,7 @@
     import Header from "../../lib/editor/Header.svelte";
     import StatusBar from "../../lib/editor/StatusBar.svelte";
     import ConfigBar from "$lib/editor/config/ConfigBar.svelte";
-    import SignInOverlay from "../../lib/auth/SignInOverlay.svelte";
+    import AuthOverlay from "../../lib/common/AuthOverlay.svelte";
 
     let canvas;
     let element;
@@ -83,7 +83,7 @@
 <svelte:window on:resize={resize} />
 
 <canvas bind:this={canvas}></canvas>
-<SignInOverlay />
+<AuthOverlay />
 
 <div class="container">
     <Header />

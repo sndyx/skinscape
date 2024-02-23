@@ -15,7 +15,7 @@ db.exec(`
 CREATE TABLE IF NOT EXISTS session (
     id TEXT NOT NULL PRIMARY KEY,
     expires_at INTEGER NOT NULL,
-    user_id INTEGER UNIQUE NOT NULL,
+    user_id INTEGER NOT NULL,
     FOREIGN KEY (user_id) REFERENCES user(id)
 );`);
 

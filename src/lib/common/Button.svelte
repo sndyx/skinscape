@@ -1,19 +1,36 @@
 <script>
-    export let svg;
-    export let selected = false;
+    // This is fine I think
+    export let svg = undefined;
+    export let text = undefined;
 
-    export let isActive;
+    export let autoSelect = false;
+
+    export let isActive = () => {return false};
+
+    function mousedown() {
+        if (autoSelect) isActive = () => {return true};
+    }
+
+    function mouseup() {
+        if (autoSelect) isActive = () => {return false};
+    }
 </script>
 
-<div class="button" class:active={isActive()} on:mousedown>
-    <img src={svg}  alt="tool"/>
+<svelte:window on:mouseup={mouseup} />
+
+<div class="button" class:active={isActive()} on:mousedown={mousedown} on:mousedown>
+    {#if svg}<img src={svg}  alt="tool"/>{/if}
+    {#if text}<p class="button-text">{text}</p>{/if}
 </div>
 
 <style>
     .button {
-        aspect-ratio: 1/1;
-        max-height: 28px;
         margin: 6px 6px 10px;
+        width: calc(100% - 12px);
+        height: calc(100% - 20px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     .button:hover {
@@ -35,12 +52,15 @@
         0 0 0 4px var(--border-dark), 4px 0 0 2px var(--border-dark), -4px 0 0 2px var(--border-dark), 0 4px 0 2px var(--border-dark), 0 -4px 0 2px var(--border-dark);
     }
 
-    .button {
-
+    .button-text {
+        color: var(--primary-text);
+        font-family: LanaPixel, serif;
+        font-size: 22px;
+        margin: 0;
     }
 
     img {
-        width: 100%;
         height: 100%;
+        aspect-ratio: 1/1;
     }
 </style>

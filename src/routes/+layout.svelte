@@ -61,6 +61,8 @@
         text-rendering: optimizeLegibility;
         -webkit-font-smoothing: subpixel-antialiased;
         -moz-osx-font-smoothing: grayscale;
+
+        cursor: url('/icons/input@2x.png') 12 12, auto;
     }
 
     :global(.border) {
