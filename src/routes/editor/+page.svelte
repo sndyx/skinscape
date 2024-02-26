@@ -3,33 +3,19 @@
     import * as THREE from "three";
     import Editor from "$lib/editor/Editor.svelte";
     import Toolbar from "$lib/editor/Toolbar.svelte";
-    import Header from "../../lib/editor/Header.svelte";
-    import StatusBar from "../../lib/editor/StatusBar.svelte";
+    import Header from "$lib/editor/Header.svelte";
+    import StatusBar from "$lib/editor/StatusBar.svelte";
     import ConfigBar from "$lib/editor/config/ConfigBar.svelte";
-    import AuthOverlay from "../../lib/common/AuthOverlay.svelte";
-    import { skins } from "../../lib/stores.js";
+    import AuthOverlay from "$lib/common/AuthOverlay.svelte";
+    import { skins } from "$lib/stores";
+    import {get} from "svelte/store";
 
     let canvas;
-    let element;
 
     let renderer;
     let editors = [];
-    let eid = 0;
 
     $: editors = editors.filter(el => el);
-
-    function addEditor() {
-        let isFirst = editors.length === 0;
-        const editor = new Editor({
-            target: element,
-            props: {
-                eid: eid++,
-                renderer: renderer,
-                isFirst: isFirst,
-            },
-        });
-        editors.push(editor);
-    }
 
     function resize() {
         if (canvas === null) return;
@@ -49,7 +35,7 @@
         const time = performance.now();
 
         if (time >= prevTime + 1000) {
-            console.log(Math.round((frames * 1000) / (time - prevTime)));
+            // console.log(Math.round((frames * 1000) / (time - prevTime)));
             frames = 0;
             prevTime = time;
         }
@@ -93,10 +79,10 @@
     <div class="center-panel">
         <ConfigBar />
         <div class="workspace">
-            <div class="editors" bind:this={element}>
+            <div class="editors">
                 {#if renderer}
                     {#each $skins as skin, index}
-                        <Editor bind:this={editors[index]} eid={eid++} renderer={renderer} isFirst={index === 0} bind:skin={$skins[index]} />
+                        <Editor bind:this={editors[index]} eid={index} skin={skin} renderer={renderer} isFirst={index === 0} />
                     {/each}
                 {/if}
             </div>

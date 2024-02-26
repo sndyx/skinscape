@@ -1,18 +1,18 @@
 <script>
     import ColorPicker from "../color/ColorPicker.svelte";
     import Palette from "../color/Palette.svelte";
-    import {rgba, tool, activeEditor, tools} from '../stores.js';
+    import { rgba, tool, activeEditor, tools, skins } from '../stores.js';
     import { Scene } from "../scene.js";
     import { onMount } from "svelte";
     import { get } from "svelte/store";
-    import UPNG from "upng-js";
     import Layer from "./Layer.svelte";
+    import UPNG from "upng-js";
 
     export let renderer;
 
     export let isFirst;
-    export let eid;
     export let skin;
+    export let eid;
 
     let palette = new Set();
 
@@ -24,7 +24,6 @@
     const keybinds = new Map();
 
     function init() {
-        skin.name = "test";
         scene = new Scene(renderer, sceneElement, skin);
         scene.setModel("alex");
         // setSkin("sourgummmybears");
@@ -47,7 +46,7 @@
             if (t === tools.pencil) {
                 sceneElement.style.cursor = "none";
             } else {
-                sceneElement.style.cursor = "url('/icons/eyedropper@2x.png') 0 24, auto";
+                sceneElement.style.cursor = "url('/icons/eyedropper@2x.png') 0 23, auto";
             }
         })
     }
@@ -180,7 +179,7 @@
 
         <div class="layers">
             {#if scene}
-                {#each scene.skin.layers as layer}
+                {#each $skins[eid].layers as layer}
                     <Layer layer={layer}></Layer>
                 {/each}
             {/if}

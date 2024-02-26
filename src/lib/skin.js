@@ -1,4 +1,6 @@
 import { rgbaBlendNormal } from "./util/blending.js";
+import {skins, updateSkins} from "$lib/stores.js";
+import {get} from "svelte/store";
 
 export class Skin {
 
@@ -12,19 +14,16 @@ export class Skin {
     }
 
     static fromJSON(json) {
-        console.log(json);
         const skin = new Skin();
-        const layers = [];
-        json.layers.forEach((layer) => {
-            layers.push(Layer.fromJSON(layer, skin));
-        });
+        skin.layers = json.layers.map((layer) => Layer.fromJSON(layer, skin));
         skin.name = json.name;
-        skin.layers = layers;
         skin.layer = json.layer;
 
-        for (let pos = 0; pos < skin.data.length / 4; pos++) {
+        for (let pos = 0; pos < skin.data.length; pos += 4) {
             skin.updatePixel(pos);
         }
+
+        return skin;
     }
 
     toJSON() {
@@ -75,7 +74,7 @@ export class Layer {
 
     toJSON() {
         return {
-            data: this.data,
+            data: Array.from(this.data),
             name: this.name,
             isActive: this.isActive,
         }
@@ -93,7 +92,7 @@ export class Layer {
         };
     }
 
-    setPixel(x, y, color, blend = true) {
+    setPixel(x, y, color, blend = true, update = true) {
         let c = { r: color.r, g: color.g, b: color.b, a: Math.floor(color.a * 255) };
         const pos = (x * 4) + ((y * 64 - 1) * 4);
         if (blend) {
@@ -104,6 +103,7 @@ export class Layer {
         }
         this.data.set([c.r, c.g, c.b, c.a], pos);
         this.skin.updatePixel(pos);
+        if (update) updateSkins();
     }
 
 }
@@ -116,14 +116,14 @@ export class TempLayer extends Layer {
         this.set = new Set();
     }
 
-    setPixel(x, y, color, blend = true) {
+    setPixel(x, y, color, blend = true, update = false) {
         this.set.add([x, y])
-        super.setPixel(x, y, color, blend);
+        super.setPixel(x, y, color, blend, update);
     }
 
     clear() {
         this.set.forEach((pos) => {
-            super.setPixel(pos[0], pos[1], {r: 0, g: 0, b: 0, a: 0}, false);
+            super.setPixel(pos[0], pos[1], {r: 0, g: 0, b: 0, a: 0}, false, false);
         });
         this.set.clear();
     }

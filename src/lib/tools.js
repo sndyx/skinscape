@@ -99,6 +99,29 @@ export class Pencil extends Tool {
 
 }
 
+export class Eraser extends Tool {
+
+    constructor() {
+        super();
+    }
+
+    hover(scene, x, y, color) {
+        let layer = scene.tempLayer();
+        layer.setPixel(x, y, { r: 255, g: 255, b: 255, a: 0.2 });
+    }
+
+    down(scene, x, y, color) {
+        let layer = scene.activeLayer();
+        layer.setPixel(x, y, { r: 0, g: 0, b: 0, a: 0 }, false);
+    }
+
+    drag(scene, x, y, color) {
+        let layer = scene.activeLayer();
+        layer.setPixel(x, y, { r: 0, g: 0, b: 0, a: 0 }, false);
+    }
+
+}
+
 export class Eyedropper extends Tool {
 
     constructor() {

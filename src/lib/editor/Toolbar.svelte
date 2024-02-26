@@ -14,6 +14,9 @@ import {get} from "svelte/store";
     <div class="button-container">
         <Button svg="/icons/paint_bucket.svg" isActive={() => $tool === tools.fill} on:mousedown={() => tool.set(tools.fill)} />
     </div>
+    <div class="button-container">
+        <Button svg="/icons/paint_bucket.svg" isActive={() => $tool === tools.eraser} on:mousedown={() => tool.set(tools.eraser)} />
+    </div>
 </div>
 
 <style>

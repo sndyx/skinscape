@@ -24,6 +24,7 @@
 		"colord": "^2.9.3",
 		"oslo": "^1.1.2",
 		"svelte-i18n": "^4.0.0",
+		"svelte-persisted-store": "^0.9.1",
 		"three": "^0.160.1",
 		"upng-js": "^2.1.0"
 	}

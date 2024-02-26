@@ -1,6 +1,8 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { createModel } from "./util/models.js";
+import { skins } from "$lib/stores.js";
+import { get } from "svelte/store";
 
 const CAMERA_POSITION = new THREE.Vector3(0, 0, 30);
 const CONTROLS_TARGET = new THREE.Vector3(0, 0, 0);
@@ -67,6 +69,7 @@ export class Scene {
 
         this.texture.needsUpdate = true; // Wah wah
         // ^^^ I am NOT happy that I had to do this, but it sometimes misses updates otherwise I think?
+        // UPDATE: This is necessary now :-)
     }
 
     resetCameraPosition() {

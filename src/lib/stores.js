@@ -1,10 +1,10 @@
-import { writable } from 'svelte/store';
-import { browser } from "$app/environment"
-import { Eyedropper, Fill, Pencil, Tool } from "./tools.js";
+import { get, writable } from 'svelte/store';
+import { persisted } from "svelte-persisted-store";
 import { colord } from "colord";
-import {Skin} from "./skin.js";
+import { Eraser, Eyedropper, Fill, Pencil } from "./tools.js";
+import { Skin } from "./skin.js";
 
-export const preferences = writable({
+export const preferences = persisted("preferences", {
     theme: 'light',
     language: 'auto',
 });
@@ -13,27 +13,34 @@ export const tools = {
     pencil: new Pencil(),
     eyedropper: new Eyedropper(),
     fill: new Fill(),
+    eraser: new Eraser(),
 }
 
-export const rgba = writable(
-    browser && colord(localStorage.getItem("rgba")).toRgb()
-    || { r: 0, g: 0, b: 0, a: 1 }
-);
-rgba.subscribe((value) => { if (browser) localStorage.rgba = colord(value).toHex() });
-
-let skin = [new Skin()];
-if (browser) {
-    const json = localStorage.getItem("skins");
-    if (json) {
-        skin = JSON.parse(json).map((json) => { return Skin.fromJSON(json) })
+export const rgba = persisted("rgba",
+    { r: 0, g: 0, b: 0, a: 1 }, {
+        serializer: {
+            parse: (text) => colord(text).toRgb(),
+            stringify: (object) => colord(object).toHex(),
+        }
     }
-}
+);
 
-export const skins = writable(skin);
-skins.subscribe((value) => { if (browser) localStorage.skins = JSON.stringify(value) });
+// This is terrible. Nobody should ever do this. This is awful. I despise this. Please don't do this.
+export const skins = persisted("skins",
+    [new Skin()], {
+        serializer: {
+            parse: (text) => JSON.parse(text).map((json) => Skin.fromJSON(json)),
+            stringify: (object) => JSON.stringify(object.map((skin) => skin.toJSON())),
+        }
+    }
+);
+// Now this, this nobody should do. This is something that is bad. This is bad. Don't do this.
+// This function MUST be called every time a skin is updated to preserve reactivity and persistence. Nice!
+export function updateSkins() {
+    skins.set(get(skins));
+}
 
 export const tool = writable(tools.pencil);
-
 
 export const activeEditor = writable(0);
 
