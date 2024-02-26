@@ -8,16 +8,14 @@
         rgba = Object.assign({}, color)
     }
     
-    // This seems like a bad way to do this...
     $: isSelected = rgba.r === color.r && rgba.g === color.g && rgba.b === color.b && rgba.a === color.a;
-    $: type = isSelected ? "selected" : "";
 </script>
 
 <!-- Gahh!! I HATE blind people!!!! -->
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
-    class="{type}"
+    class:selected={isSelected}
     on:click={click}
     style="--color: {colord(color).toHex()}"
 >

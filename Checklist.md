@@ -44,8 +44,8 @@
         - [ ] Export skin
 ### Social
 - [ ] Social
-    - [ ] Log in/out
-    - [ ] Sign up
+    - [X] Log in/out
+    - [X] Sign up
     - [ ] Profile
         - [ ] About me
         - [ ] Skin display
@@ -82,7 +82,7 @@
             - [ ] About me
             - [ ] Skin display
             - [ ] Pinned skins
-    - [ ] Account creation
+    - [X] Account creation
     - [ ] Settings
 
 ## Theming

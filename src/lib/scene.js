@@ -1,7 +1,6 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { createModel } from "./util/models.js";
-import { rgbaBlendNormal } from "./util/blending.js";
 
 const CAMERA_POSITION = new THREE.Vector3(0, 0, 30);
 const CONTROLS_TARGET = new THREE.Vector3(0, 0, 0);
@@ -9,9 +8,10 @@ const MAX_FPS = 60;
 
 export class Scene {
 
-    constructor(renderer, element) {
+    constructor(renderer, element, skin) {
         this.renderer = renderer;
         this.element = element;
+        this.skin = skin;
         this.scene = new THREE.Scene();
         this.objects = new THREE.Group();
 
@@ -27,13 +27,7 @@ export class Scene {
         this.controls.minDistance = 10;
         this.elapsedTime = 0;
 
-        this.layers = [new Layer(this, 'default')];
-        this.layer = 0;
-
-        this.temp = new TempLayer(this);
-
-        this.data = new Uint8Array(64 * 64 * 4);
-        this.texture = new THREE.DataTexture(this.data, 64, 64);
+        this.texture = new THREE.DataTexture(this.skin.data, 64, 64);
         this.texture.flipY = true;
 
         this.camera.add(new THREE.DirectionalLight(0xFFFFFF, 1.7));
@@ -153,96 +147,17 @@ export class Scene {
     }
 
     setTexture(data) {
-        this.data.set(data);
+        this.skin.data.set(data);
         this.activeLayer().data.set(data);
         this.texture.needsUpdate = true;
     }
 
     activeLayer() {
-        return this.layers[this.layer];
+        return this.skin.layers[this.skin.layer];
     }
 
     tempLayer() {
-        return this.temp;
-    }
-
-    updatePixel(pos) {
-        let color = { r: 0, g: 0, b: 0, a: 0 };
-        for (let i = 0; i < this.layers.length + 1; i++) {
-            let l;
-            if (i === this.layers.length) {
-                l = this.temp; // Use temp layer as last layer
-            } else {
-                l = this.layers[i];
-            }
-            if (!l.isActive) continue; // Skip hidden layers
-            const c = l.getPixelByPos(pos);
-            if (c.a === 255) { // Alpha already transformed to 0-255 by layer
-                color = c;
-            } else {
-                color = rgbaBlendNormal(color, c);
-            }
-        }
-        this.data.set([color.r, color.g, color.b, color.a], pos);
-        this.texture.needsUpdate = true;
-    }
-
-}
-
-export class Layer {
-
-    constructor(scene, name) {
-        this.data = new Uint8ClampedArray(64 * 64 * 4);
-        this.scene = scene;
-        this.name = name;
-        this.isActive = true;
-    }
-
-    getPixel(x, y) {
-        const pos = (x * 4) + ((y * 64 - 1) * 4);
-        return this.getPixelByPos(pos);
-    }
-
-    getPixelByPos(pos) {
-        return {
-            r: this.data[pos], g: this.data[pos + 1],
-            b: this.data[pos + 2], a: this.data[pos + 3],
-        };
-    }
-
-    setPixel(x, y, color, blend = true) {
-        let c = { r: color.r, g: color.g, b: color.b, a: Math.floor(color.a * 255) };
-        const pos = (x * 4) + ((y * 64 - 1) * 4);
-        if (blend) {
-            if (c.a !== 255) { // Mix colors if color is transparent
-                const current = this.getPixelByPos(pos);
-                c = rgbaBlendNormal(current, c);
-            }
-        }
-        this.data.set([c.r, c.g, c.b, c.a], pos);
-        this.scene.updatePixel(pos);
-    }
-
-}
-
-// Layer impl optimizing fast removal of all pixels
-export class TempLayer extends Layer {
-
-    constructor(scene) {
-        super(scene, 'temp');
-        this.set = new Set();
-    }
-
-    setPixel(x, y, color, blend = true) {
-        this.set.add([x, y])
-        super.setPixel(x, y, color, blend);
-    }
-
-    clear() {
-        this.set.forEach((pos) => {
-            super.setPixel(pos[0], pos[1], {r: 0, g: 0, b: 0, a: 0}, false);
-        });
-        this.set.clear();
+        return this.skin.temp;
     }
 
 }

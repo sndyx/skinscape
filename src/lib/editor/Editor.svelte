@@ -12,6 +12,7 @@
 
     export let isFirst;
     export let eid;
+    export let skin;
 
     let palette = new Set();
 
@@ -23,7 +24,8 @@
     const keybinds = new Map();
 
     function init() {
-        scene = new Scene(renderer, sceneElement);
+        skin.name = "test";
+        scene = new Scene(renderer, sceneElement, skin);
         scene.setModel("alex");
         // setSkin("sourgummmybears");
 
@@ -178,7 +180,7 @@
 
         <div class="layers">
             {#if scene}
-                {#each scene.layers as layer}
+                {#each scene.skin.layers as layer}
                     <Layer layer={layer}></Layer>
                 {/each}
             {/if}

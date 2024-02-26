@@ -5,7 +5,7 @@
 <div
     class="picker-indicator"
     style={`left: calc(${pos.x}px - 2px); top: calc(${pos.y}px - 2px);`}
-/>
+></div>
 
 <style>
     div {

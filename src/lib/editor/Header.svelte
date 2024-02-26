@@ -27,7 +27,7 @@ import { _ } from "svelte-i18n";
     </div>
     <div class="header-right">
         {#if $profile}
-            <div class="pfp"><img src={$profile.display_skin} width="32" height="32" alt="profile"></div>
+            <div class="pfp"><img src={$profile.display_skin} width="28" height="28" alt="profile"></div>
         {:else}
             <div class="login" on:mousedown={() => {showAuthOverlay.set(true)}}>
                 <p class="login-text">{$_("editor.header.login")}</p>
@@ -89,6 +89,11 @@ import { _ } from "svelte-i18n";
     }
 
     .pfp {
-        margin: 0 16px;
+        margin: 2px 16px;
+        box-shadow: 0 0 0 2px var(--border-dark);
+    }
+
+    .pfp:hover {
+        --border-dark: var(--button-hover);
     }
 </style>
