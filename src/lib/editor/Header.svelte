@@ -43,6 +43,8 @@ import { _ } from "svelte-i18n";
         justify-content: space-between;
         width: 100%;
         height: 32px;
+        margin-bottom: 4px;
+        box-shadow: 0 2px 0 var(--border-dark), 0 4px 0 var(--border-light);
     }
 
     .header-left {

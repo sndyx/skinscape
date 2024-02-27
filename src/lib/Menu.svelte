@@ -57,10 +57,6 @@
         padding: 0 5px;
     }
 
-    .menu:hover {
-        background: var(--main-color);
-    }
-
     .content {
         background: var(--inlay-color);
         position: absolute;

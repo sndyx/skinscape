@@ -1,12 +1,11 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { createModel } from "./util/models.js";
-import { skins } from "$lib/stores.js";
-import { get } from "svelte/store";
 
 const CAMERA_POSITION = new THREE.Vector3(0, 0, 30);
 const CONTROLS_TARGET = new THREE.Vector3(0, 0, 0);
 const MAX_FPS = 60;
+const LERP_ALPHA = 0.87;
 
 export class Scene {
 
@@ -54,7 +53,7 @@ export class Scene {
         this.elapsedTime += this.deltaTime;
         if (this.elapsedTime > 1 / MAX_FPS) {
             if (this.smoothReset) this.doSmoothReset()
-            this.controls.update();
+            this.controls.update(); // Update state
             this.elapsedTime %= 1 / MAX_FPS;
         }
 
@@ -83,33 +82,41 @@ export class Scene {
         this.controls.maxPolarAngle = Math.PI;
         this.controls.minDistance = 10;
         this.controls.maxDistance = 200;
+        this.controls.enablePan = true;
+        this.controls.enabled = true;
         this.smoothReset = false;
     }
 
     doSmoothReset() {
-        // get current angles
-        let alpha = this.controls.getAzimuthalAngle(),
-            beta = this.controls.getPolarAngle() - Math.PI / 2,
-            gamma = this.controls.getDistance() - 30,
-            delta = this.camera.position.distanceTo(CAMERA_POSITION);
+        let azimuthalAngle = this.controls.getAzimuthalAngle(),
+            polarAngle = this.controls.getPolarAngle() - Math.PI / 2,
+            distance = this.controls.getDistance() - 30,
+            movement = this.controls.target.clone()
 
-        // if they are close to the reset values, just set these values
-        if (Math.abs(alpha) < 0.001) alpha = 0;
-        if (Math.abs(beta) < 0.001) beta = 0;
-        if (Math.abs(gamma) < 0.001) gamma = 0;
+        let lerpDelta = LERP_ALPHA ** (1 + this.deltaTime * 60)
 
-        // smooth change using manual lerp
-        this.controls.minAzimuthAngle = 0.82*alpha;
-        this.controls.maxAzimuthAngle = this.controls.minAzimuthAngle;
+        if (Math.abs(azimuthalAngle) < 0.001) azimuthalAngle = 0
+        if (Math.abs(polarAngle) < 0.001) polarAngle = 0
+        if (Math.abs(distance) < 0.001 && Math.abs(distance) > -0.001) distance = 0
+        if (movement.distanceTo(CONTROLS_TARGET) < 0.05) movement = CONTROLS_TARGET
 
-        this.controls.minPolarAngle = Math.PI/2 + 0.82*beta;
-        this.controls.maxPolarAngle = this.controls.minPolarAngle;
+        this.controls.minAzimuthAngle = lerpDelta * azimuthalAngle
+        this.controls.maxAzimuthAngle = this.controls.minAzimuthAngle
 
-        this.controls.minDistance = 30 + 0.82*gamma;
-        this.controls.maxDistance = this.controls.minDistance;
+        this.controls.minPolarAngle = Math.PI/2 + lerpDelta * polarAngle
+        this.controls.maxPolarAngle = this.controls.minPolarAngle
 
-        // if the reset values are reached, exit smooth reset
-        if(alpha === 0 && beta === 0 && gamma === 0) this.resetControls()
+        this.controls.minDistance = lerpDelta * distance + 30
+        this.controls.maxDistance = this.controls.minDistance
+
+        movement.lerp(CONTROLS_TARGET, 1.0 - lerpDelta)
+        this.controls.target.set(movement.x, movement.y, movement.z)
+
+        if(azimuthalAngle === 0
+            && polarAngle === 0
+            && distance === 0
+            && movement.equals(CONTROLS_TARGET)
+        ) this.resetControls()
     }
 
     updatePointer(x, y) {

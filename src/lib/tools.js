@@ -107,7 +107,7 @@ export class Eraser extends Tool {
 
     hover(scene, x, y, color) {
         let layer = scene.tempLayer();
-        layer.setPixel(x, y, { r: 255, g: 255, b: 255, a: 0.2 });
+        layer.setPixel(x, y, { r: 0, g: 0, b: 0, a: 0.5 });
     }
 
     down(scene, x, y, color) {
