@@ -185,3 +185,71 @@ export class Fill extends Tool {
     }
 
 }
+
+export class Marquee extends Tool {
+
+    constructor() {
+        super();
+        this.configComponent = PencilConfig;
+        this.visited = new Set();
+        this.size = 1;
+    }
+
+    hover(scene, x, y, color) {
+        let layer = scene.tempLayer();
+        layer.setPixel(x, y, color);
+    }
+
+    down(scene, x, y, color) {
+        if (this.visited.has([x, y].toString())) return;
+        let layer = scene.activeLayer();
+        layer.setPixel(x, y, color);
+        this.visited.add([x, y].toString());
+    }
+
+    drag(scene, x, y, color) {
+        if (this.visited.has([x, y].toString())) return;
+        let layer = scene.activeLayer();
+        layer.setPixel(x, y, color);
+        this.visited.add([x, y].toString());
+    }
+
+    up(scene, color) {
+        this.visited.clear();
+    }
+
+}
+
+export class Shape extends Tool {
+
+    constructor() {
+        super();
+        this.configComponent = PencilConfig;
+        this.visited = new Set();
+        this.size = 1;
+    }
+
+    hover(scene, x, y, color) {
+        let layer = scene.tempLayer();
+        layer.setPixel(x, y, color);
+    }
+
+    down(scene, x, y, color) {
+        if (this.visited.has([x, y].toString())) return;
+        let layer = scene.activeLayer();
+        layer.setPixel(x, y, color);
+        this.visited.add([x, y].toString());
+    }
+
+    drag(scene, x, y, color) {
+        if (this.visited.has([x, y].toString())) return;
+        let layer = scene.activeLayer();
+        layer.setPixel(x, y, color);
+        this.visited.add([x, y].toString());
+    }
+
+    up(scene, color) {
+        this.visited.clear();
+    }
+
+}

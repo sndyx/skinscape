@@ -1,29 +1,40 @@
 :root {
-    --main-color: #747c82;
-    --secondary-color: #dae2f6;
-    --inlay-color: #bec6cd;
-    --scene-color: #bec6cd;
+    --main-color: #bababc;
+    --secondary-color: #e4e5f1;
+    --inlay-color: var(--secondary-color);
+    --scene-color: var(--secondary-color);
     --error-color: #ff4444;
 
     --primary-text: #000000;
     --secondary-text: #4e4e4e;
     --link-text: #4393de;
 
-    --header-color: #2a2a2a;
+    --icon-color: var(--secondary-color);
 
+    --status-color: #4393de;
+
+    --button-dark: #515152;
     --button-color: #8a8a8b;
     --button-light: #ababab;
     --button-hover: #ffffff;
     --button-selected: #6e6e6e;
 
-    --border-dark: #414142;
-    --border-color: #6a6a6b;
-    --border-light: #ababab;
+    --border-dark: #000000;
+    --border-color: var(--secondary-color);
+    --border-light: var(--secondary-color);
 }
 
 .logo {
     --border-dark: #000000;
-    color: var(--secondary-color);
+    color: #79b1e5;
+}
+
+.status-text {
+    color: #ffffff !important;
+}
+
+.center-panel {
+    background: repeating-conic-gradient(var(--main-color) 0% 25%, #adadad 0% 50%) 50% / 8px 8px;
 }
 
 .menu:hover {

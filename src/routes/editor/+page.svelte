@@ -79,6 +79,7 @@
     <div class="center-panel">
         <ConfigBar />
         <div class="workspace">
+            <Toolbar />
             <div class="editors">
                 {#if renderer}
                     {#each $skins as skin, index}
@@ -86,7 +87,6 @@
                     {/each}
                 {/if}
             </div>
-            <Toolbar />
         </div>
     </div>
 

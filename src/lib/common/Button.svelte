@@ -20,7 +20,7 @@
 <svelte:window on:mouseup={mouseup} />
 
 <div class="button" class:active={isActive()} on:mousedown={mousedown} on:mousedown>
-    {#if svg}<img src={svg}  alt="tool"/>{/if}
+    {#if svg}<div class="button-img" style="mask-image: url('{svg}')"></div>{/if}
     {#if text}<p class="button-text" style="font-size: {fontSize};">{text}</p>{/if}
 </div>
 
@@ -59,8 +59,11 @@
         margin: 0;
     }
 
-    img {
+    .button-img {
         height: 100%;
         aspect-ratio: 1/1;
+        mask-size: cover;
+        mask-mode: luminance;
+        background-color: var(--icon-color);
     }
 </style>

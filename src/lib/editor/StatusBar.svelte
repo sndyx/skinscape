@@ -26,7 +26,9 @@
         height: 26px;
         padding: 0 16px;
         display: flex;
-        background-color: var(--secondary-color);
+        background-color: var(--status-color, var(--secondary-color));
+        margin-top: 4px;
+        box-shadow: 0 -2px 0 var(--border-dark), 0 -4px 0 var(--border-light);
     }
 
     .status-bar-left {

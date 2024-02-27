@@ -61,7 +61,7 @@
 <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
-    class="slider"
+    class="alpha"
     tabindex="0"
     bind:this={element}
     bind:contentRect={contentRect}
@@ -74,14 +74,14 @@
 </div>
 
 <style>
-    .slider {
+    .alpha {
         position: relative;
         flex: 1;
         background: repeating-conic-gradient(#ccc 0% 25%, #fff 0% 50%) 50% / 20px 20px;
         cursor: url('/icons/eyedropper@2x.png') 0 23, auto;
     }
 
-    .slider:before {
+    .alpha:before {
         content: "";
         position: absolute;
 		inset: 0;

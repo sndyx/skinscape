@@ -29,7 +29,7 @@ import { _ } from "svelte-i18n";
         {#if $profile}
             <div class="pfp"><img src={$profile.display_skin} width="28" height="28" alt="profile"></div>
         {:else}
-            <div class="login" on:mousedown={() => {showAuthOverlay.set(true)}}>
+            <div class="login border-small" on:mousedown={() => {showAuthOverlay.set(true)}}>
                 <p class="login-text">{$_("editor.header.login")}</p>
             </div>
         {/if}
@@ -38,7 +38,7 @@ import { _ } from "svelte-i18n";
 
 <style>
     .header {
-        background-color: var(--secondary-color);
+        background-color: var(--header-color, var(--secondary-color));
         display: flex;
         justify-content: space-between;
         width: 100%;
@@ -61,6 +61,16 @@ import { _ } from "svelte-i18n";
 
     .logo-container {
         padding: 6px;
+    }
+
+    .logo-container:before {
+        font-family: 'Silkscreen', serif;
+        letter-spacing: 4px;
+        color: #ffffff;
+        text-shadow: 2px 0 0 var(--border-dark),
+        -2px 0 0 var(--border-dark),
+        0 2px 0 var(--border-dark),
+        0 -2px 0 var(--border-dark);
     }
 
     .logo {

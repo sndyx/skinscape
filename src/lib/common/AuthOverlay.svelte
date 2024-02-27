@@ -164,8 +164,7 @@
     .auth-overlay {
         display: none;
         z-index: 3;
-        background: repeating-linear-gradient(#ffffff02, #ffffff02 2px, #00000000 2px, #00000000 4px),
-        repeating-linear-gradient(to right, #ffffff02, #ffffff02 2px, #00000000 2px, #00000000 4px);
+        background: repeating-conic-gradient(#cccccc30 0% 25%, #ffffff30 0% 50%) 50% / 8px 8px;
         backdrop-filter: blur(1px);
         position: absolute;
         align-items: center;

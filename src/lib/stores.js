@@ -1,11 +1,11 @@
 import { get, writable } from 'svelte/store';
 import { persisted } from "svelte-persisted-store";
 import { colord } from "colord";
-import { Eraser, Eyedropper, Fill, Pencil } from "./tools.js";
+import {Eraser, Eyedropper, Fill, Marquee, Pencil, Shape} from "./tools.js";
 import { Skin } from "./skin.js";
 
 export const preferences = persisted("preferences", {
-    theme: 'dark',
+    theme: 'aseprite',
     language: 'auto',
 });
 
@@ -14,6 +14,8 @@ export const tools = {
     eyedropper: new Eyedropper(),
     fill: new Fill(),
     eraser: new Eraser(),
+    marquee: new Marquee(),
+    shape: new Shape(),
 }
 
 export const rgba = persisted("rgba",

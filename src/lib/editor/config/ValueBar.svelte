@@ -62,7 +62,6 @@
         style="width: {width}px;"
     ></div>
     <div class="value-bar-overlay">
-        {value}{suffix}
     </div>
 </div>
 
@@ -76,5 +75,10 @@
 
     .value-bar-inner {
         background-color: var(--secondary-color);
+    }
+
+    .value-bar-overlay {
+        font-family: "Silkscreen", serif;
+        color: var(--primary-text);
     }
 </style>
