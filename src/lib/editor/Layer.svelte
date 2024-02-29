@@ -1,8 +1,11 @@
 <script>
     import { onMount } from "svelte";
+    import Skin from "../common/Skin.svelte";
 
     export let layer;
+    export let renderer;
 
+    /*
     let canvas;
     let ctx;
 
@@ -12,15 +15,18 @@
     })
 
     $: if (ctx) ctx.putImageData(new ImageData(layer.data, 64, 64), 0, 0);
+     */
 </script>
 
 <div class="layer">
-    <canvas bind:this={canvas} class="layer-skin-2d" width="64" height="64"></canvas>
+    {#if layer}
+        <Skin bind:src={layer.data} renderer={renderer}></Skin>
+    {/if}
 </div>
 
 <style>
-    canvas {
+    .layer {
         width: 128px;
-        height: 128px;
+        height: 200px;
     }
 </style>

@@ -26,7 +26,7 @@
     function init() {
         scene = new Scene(renderer, sceneElement, skin);
         scene.setModel("alex");
-        // setSkin("sourgummmybears");
+        setSkin("sourgummmybears");
 
         keybinds.set('o', () => {
             scene.toggleOverlay(!scene.overlay);
@@ -48,7 +48,7 @@
             } else {
                 sceneElement.style.cursor = "url('/icons/eyedropper@2x.png') 0 23, auto";
             }
-        })
+        });
     }
 
     onMount(init);
@@ -180,7 +180,7 @@
         <div class="layers">
             {#if scene}
                 {#each $skins[eid].layers as layer}
-                    <Layer layer={layer}></Layer>
+                    <Layer layer={layer} renderer={renderer}></Layer>
                 {/each}
             {/if}
         </div>

@@ -88,18 +88,20 @@ export class Scene {
     }
 
     doSmoothReset() {
-        let azimuthalAngle = this.controls.getAzimuthalAngle(),
-            polarAngle = this.controls.getPolarAngle() - Math.PI / 2,
-            distance = this.controls.getDistance() - 30,
-            movement = this.controls.target.clone()
+        let azimuthalAngle = this.controls.getAzimuthalAngle();
+        let polarAngle = this.controls.getPolarAngle() - Math.PI / 2;
+        let distance = this.controls.getDistance() - 30;
+        let movement = this.controls.target.clone();
 
-        let lerpDelta = LERP_ALPHA ** (1 + this.deltaTime * 60)
-
+        // Round to 0
         if (Math.abs(azimuthalAngle) < 0.001) azimuthalAngle = 0
         if (Math.abs(polarAngle) < 0.001) polarAngle = 0
         if (Math.abs(distance) < 0.001 && Math.abs(distance) > -0.001) distance = 0
         if (movement.distanceTo(CONTROLS_TARGET) < 0.05) movement = CONTROLS_TARGET
 
+        const lerpDelta = LERP_ALPHA ** (1 + this.deltaTime * 60)
+
+        // Change values
         this.controls.minAzimuthAngle = lerpDelta * azimuthalAngle
         this.controls.maxAzimuthAngle = this.controls.minAzimuthAngle
 
@@ -112,6 +114,7 @@ export class Scene {
         movement.lerp(CONTROLS_TARGET, 1.0 - lerpDelta)
         this.controls.target.set(movement.x, movement.y, movement.z)
 
+        // End smooth reset if all values are 0
         if(azimuthalAngle === 0
             && polarAngle === 0
             && distance === 0
@@ -151,7 +154,7 @@ export class Scene {
 
     setModel(name) {
         this.objects.clear();
-        const models = createModel(name, this.texture);
+        const models = createModel(name, this.texture, true);
         models.forEach((it) => { this.objects.add(it) });
         this.model = name;
     }

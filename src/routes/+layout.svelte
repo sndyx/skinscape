@@ -13,7 +13,7 @@
         updateProfile();
     })
 </script>
-  
+
 <svelte:head>
     <link rel="stylesheet" href={`/themes/${theme}.css`} />
 </svelte:head>

@@ -1,8 +1,8 @@
 :root {
     --main-color: #bababc;
     --secondary-color: #e4e5f1;
-    --inlay-color: var(--secondary-color);
-    --scene-color: var(--secondary-color);
+    --inlay-color: #888888;
+    --scene-color: var(--inlay-color);
     --error-color: #ff4444;
 
     --primary-text: #000000;
@@ -34,7 +34,7 @@
 }
 
 .center-panel {
-    background: repeating-conic-gradient(var(--main-color) 0% 25%, #adadad 0% 50%) 50% / 8px 8px;
+    background: repeating-conic-gradient(var(--main-color) 0% 25%, #b7b7b7 0% 50%) 50% / 8px 8px;
 }
 
 .menu:hover {

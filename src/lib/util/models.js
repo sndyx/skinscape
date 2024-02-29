@@ -20,7 +20,7 @@ const DESCRIPTORS = {
 };
 const Y_OFFSET = 1.5; // Moves model to center of camera (moving camera instead centers model weirdly)
 
-export function createModel(type, texture) {
+export function createModel(type, texture, gridlines) {
     const descriptor = DESCRIPTORS[type];
     const properties = Object.getOwnPropertyNames(descriptor.model);
     const group = [];
@@ -58,33 +58,39 @@ export function createModel(type, texture) {
 
         const mesh = new THREE.Mesh(geometry, material);
         const overlayMesh = new THREE.Mesh(overlayGeometry, overlayMaterial);
-        const outline = new GridBox(part['width'], part['height'], part['depth'], 2);
-        const overlayOutline = new GridBox(part['width'], part['height'], part['depth'], 3);
-
-        overlayMesh.layers.set(1);
-        outline.layers.set(2);
 
         const name = properties[i];
 
         mesh.name = name;
-        outline.name = name + "_outline";
         overlayMesh.name = name + "_overlay";
-        overlayOutline.name = name + "_outline_overlay";
 
         overlayMesh.scale.set(1.1, 1.05, 1.1);
-        overlayOutline.scale.set(1.1, 1.05, 1.1);
 
         overlayMesh.renderOrder = 1;
 
         group.push(mesh);
-        group.push(outline);
         group.push(overlayMesh);
-        group.push(overlayOutline);
 
         mesh.position.set(part.x, part.y + Y_OFFSET, part.z);
-        outline.position.set(part.x, part.y + Y_OFFSET, part.z);
         overlayMesh.position.set(part.x, part.y + Y_OFFSET, part.z);
-        overlayOutline.position.set(part.x, part.y + Y_OFFSET, part.z);
+
+        if (gridlines) {
+            const outline = new GridBox(part['width'], part['height'], part['depth'], 2);
+            const overlayOutline = new GridBox(part['width'], part['height'], part['depth'], 3);
+
+            overlayMesh.layers.set(1);
+            outline.layers.set(2);
+
+            outline.name = name + "_outline";
+            overlayOutline.name = name + "_outline_overlay";
+
+            overlayOutline.scale.set(1.1, 1.05, 1.1);
+
+            group.push(outline);
+            group.push(overlayOutline);
+            outline.position.set(part.x, part.y + Y_OFFSET, part.z);
+            overlayOutline.position.set(part.x, part.y + Y_OFFSET, part.z);
+        }
     }
     return group;
 }

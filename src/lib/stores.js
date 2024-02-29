@@ -5,7 +5,7 @@ import {Eraser, Eyedropper, Fill, Marquee, Pencil, Shape} from "./tools.js";
 import { Skin } from "./skin.js";
 
 export const preferences = persisted("preferences", {
-    theme: 'aseprite',
+    theme: 'light',
     language: 'auto',
 });
 
