@@ -1,6 +1,5 @@
-import { rgbaBlendNormal } from "./util/blending.js";
-import {skins, updateSkins} from "$lib/stores.js";
-import {get} from "svelte/store";
+import {rgbaBlendNormal} from "./util/blending.js";
+import {updateSkins} from "$lib/stores.js";
 
 export class Skin {
 

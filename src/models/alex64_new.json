@@ -15,9 +15,9 @@
 			}
 		},
 		{
-			"name": "Head Overlay",
-			"from": [3.5, 23, 3.5],
-			"to": [12.5, 32, 12.5],
+			"name": "overlay:Head",
+			"from": [3.5, 23.5, 3.5],
+			"to": [12.5, 32.5, 12.5],
 			"faces": {
 				"north": {"uv": [10, 2, 12, 4], "texture": "#texture"},
 				"east": {"uv": [8, 2, 10, 4], "texture": "#texture"},
@@ -41,7 +41,7 @@
 			}
 		},
 		{
-			"name": "Body Overlay",
+			"name": "overlay:Body",
 			"from": [3.75, 11.75, 5.75],
 			"to": [12.25, 24.25, 10.25],
 			"faces": {
@@ -67,7 +67,7 @@
 			}
 		},
 		{
-			"name": "Right Arm Overlay",
+			"name": "overlay:Right Arm",
 			"from": [11.75, 11.75, 5.75],
 			"to": [15.25, 24.25, 10.25],
 			"faces": {
@@ -93,7 +93,7 @@
 			}
 		},
 		{
-			"name": "Left Arm Overlay",
+			"name": "overlay:Left Arm",
 			"from": [0.75, 11.75, 5.75],
 			"to": [4.25, 24.25, 10.25],
 			"faces": {
@@ -119,7 +119,7 @@
 			}
 		},
 		{
-			"name": "Right Leg Overlay",
+			"name": "overlay:Right Leg",
 			"from": [7.65, -0.25, 5.75],
 			"to": [12.15, 12.25, 10.25],
 			"faces": {
@@ -145,7 +145,7 @@
 			}
 		},
 		{
-			"name": "Left Leg Overlay",
+			"name": "overlay:Left Leg",
 			"from": [3.85, -0.25, 5.75],
 			"to": [8.35, 12.25, 10.25],
 			"faces": {

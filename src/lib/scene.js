@@ -1,6 +1,8 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { createModel } from "./util/models.js";
+import {create} from "$lib/util/model";
+import * as alex64_new from "../models/alex64_new.json";
 
 const CAMERA_POSITION = new THREE.Vector3(0, 0, 30);
 const CONTROLS_TARGET = new THREE.Vector3(0, 0, 0);
@@ -29,7 +31,6 @@ export class Scene {
         this.elapsedTime = 0;
 
         this.texture = new THREE.DataTexture(this.skin.data, 64, 64);
-        this.texture.flipY = true;
 
         this.camera.add(new THREE.DirectionalLight(0xFFFFFF, 1.7));
         this.scene.add(new THREE.AmbientLight(0xFFFFFF, 1));
@@ -154,8 +155,8 @@ export class Scene {
 
     setModel(name) {
         this.objects.clear();
-        const models = createModel(name, this.texture, true);
-        models.forEach((it) => { this.objects.add(it) });
+        const model = create(alex64_new, this.texture, true);
+        this.objects.add(model);
         this.model = name;
     }
 

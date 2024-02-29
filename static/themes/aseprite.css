@@ -4,10 +4,10 @@
 
     --header-color: #d2cbbf;
     --status-color: var(--main-color);
+    --error-color: #ff4444;
 
     --primary-text: #000000;
     --secondary-text: #2c2f31;
-    --error-color: #ff4444;
     --link-text: #0017ff;
 
     --border-dark: #000000;

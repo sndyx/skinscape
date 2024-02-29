@@ -45,7 +45,12 @@ export function createModel(type, texture, gridlines) {
                 const ud = part[DIRECTION_MAP[face][0]] - 0.05;
                 const vd = -part[DIRECTION_MAP[face][1]] + 0.05;
                 uv[1] = 64 - uv[1];
-                const offsets = [0.05, -0.05, ud, -0.05, 0.05, vd, ud, vd];
+                const offsets = [
+                    0.05, -0.05,
+                    ud, -0.05,
+                    0.05, vd,
+                    ud, vd
+                ];
                 if (face === 'bottom') offsets.unshift(...offsets.splice(4));
                 for (let i = 0; i < 8; i++) buffer.array[j * 8 + i] = (uv[i % 2] + offsets[i]) / 64;
             }
