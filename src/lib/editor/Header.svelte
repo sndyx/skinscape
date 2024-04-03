@@ -1,6 +1,6 @@
 <script>
 import Menu from "../Menu.svelte";
-import { profile, showAuthOverlay } from "$lib/stores.js";
+import { profile, showAuthOverlay } from "$lib/stores";
 
 import { _ } from "svelte-i18n";
 </script>

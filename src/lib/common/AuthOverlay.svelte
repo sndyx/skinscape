@@ -3,7 +3,7 @@
     // Perhaps this should be refactored later...
     // jk
     import Button from "$lib/common/Button.svelte";
-    import { showAuthOverlay, updateProfile } from "$lib/stores.js";
+    import { showAuthOverlay, updateProfile } from "$lib/stores";
     import { _ } from "svelte-i18n";
 
     let registering = false;

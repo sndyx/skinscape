@@ -1,7 +1,7 @@
 import { error, json } from "@sveltejs/kit";
 import { Argon2id } from "oslo/password";
-import { lucia } from "$lib/auth.js";
-import { db } from "$lib/db.js";
+import { lucia } from "$lib/auth";
+import { db } from "$lib/db";
 
 export async function POST({ url, cookies }) {
     const username = url.searchParams.get("username");

@@ -1,50 +1,25 @@
-<script>
+<script lang="ts">
     import {onMount} from "svelte";
-    import * as THREE from "three";
-    import {createModel} from "../util/models.js";
+    import {Scene} from "$lib/util/scene";
+    import type {WebGLRenderer} from "three";
+    import type {Skin} from "$lib/util/skin";
 
-    const CAMERA_POSITION = new THREE.Vector3(0, 0, 30);
+    export let renderer: WebGLRenderer;
+    export let skin: Skin;
 
-    export let src;
-    export let renderer;
+    let scene: Scene;
 
-    console.log(src);
-
-    let element;
-
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(70, 2, 1, 10000);
-    camera.position.add(CAMERA_POSITION);
-    camera.lookAt(0, 10, 30);
-    camera.layers.enable(1);
-
-    const objects = new THREE.Group();
-
-    const texture = new THREE.DataTexture(src, 64, 64);
-    texture.flipY = true;
-
-    const model = createModel("alex", texture, false);
-    model.forEach((obj) => { objects.add(obj); });
-    scene.add(objects);
-    scene.add(camera);
+    let element: HTMLDivElement;
 
     function render() {
-        const rect = element.getBoundingClientRect();
-        renderer.setViewport(rect.x, window.innerHeight - rect.bottom, rect.width, rect.height);
-        renderer.setScissor(rect.x, window.innerHeight - rect.bottom, rect.width, rect.height);
-        camera.aspect = rect.width / rect.height;
-        camera.updateProjectionMatrix();
-
-        renderer.render(scene, camera);
-
-        texture.needsUpdate = true;
-
+        scene.render();
         requestAnimationFrame(render);
     }
 
-     onMount(() => {
+    onMount(() => {
+        scene = new Scene(renderer, element, skin)
         requestAnimationFrame(render);
-    })
+    });
 </script>
 
 <div bind:this={element}></div>

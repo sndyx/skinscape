@@ -1,6 +1,6 @@
 import { json } from "@sveltejs/kit";
-import { lucia } from "$lib/auth.js";
-import { db } from "$lib/db.js";
+import { lucia } from "$lib/auth";
+import { db } from "$lib/db";
 
 export async function GET({ cookies }) {
     const sessionId = cookies.get(lucia.sessionCookieName);

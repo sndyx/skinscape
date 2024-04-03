@@ -1,6 +1,6 @@
 import {
     Box3,
-    BoxGeometry,
+    BoxGeometry, BufferGeometry,
     DataTexture,
     Float32BufferAttribute,
     Group,
@@ -9,35 +9,72 @@ import {
     MeshLambertMaterial
 } from "three";
 import * as THREE from "three";
+// @ts-ignore
 import {LineSegmentsGeometry} from "three/examples/jsm/lines/LineSegmentsGeometry";
+// @ts-ignore
 import {LineMaterial} from "three/examples/jsm/lines/LineMaterial";
+// @ts-ignore
 import {LineSegments2} from "three/examples/jsm/lines/LineSegments2";
 
-const DIRECTIONS = ["up", "down", "east", "west", "north", "south"];
+import * as model_steve64 from "../../models/steve64_new.json";
+import * as model_alex64 from "../../models/alex64_new.json";
+import * as model_test from "../../models/test.json";
+
+export namespace Models {
+
+    export const steve64: Model = model_steve64;
+    export const alex64: Model = model_alex64;
+    export const test: Model = model_test;
+
+}
 
 // Can't use tuples because of JSON incompatibility.
 
-type Model = {
-    texture_size: number[]; // [width, height]
+/**
+ * Represents a textured model.
+ */
+export type Model = {
+    // [width, height]
+    texture_size: number[];
     elements: ModelElement[];
 };
 
-type ModelElement = {
+/**
+ * Represents a single box in a `Model`.
+ */
+export type ModelElement = {
     name?: string;
-    from: number[]; // [x, y, z]
-    to: number[]; // [x, y, z]
+    // [x, y, z]
+    from: number[];
+    // [x, y, z]
+    to: number[];
     faces: {
         [direction in Direction]?: ModelFace;
     };
 }
 
-type ModelFace = {
-    uv: number[]; // [x1, y1, x2, y2]
+/**
+ * Represents a `Model` face.
+ */
+export type ModelFace = {
+    // [x1, y1, x2, y2]
+    uv: number[];
     texture: string;
 }
 
-type Direction = "up" | "down" | "north" | "south" | "east" | "west";
+// Represents a face direction.
+export type Direction = "up" | "down" | "north" | "south" | "east" | "west";
 
+// All model face directions, ordered by THREE.js BoxGeometry face order.
+const DIRECTIONS = ["east", "west", "up", "down", "south", "north"];
+
+/**
+ * Creates a `Group` of `Object3D`s representing the given `Model`.
+ *
+ * @param model model to create
+ * @param texture texture to map to UVs
+ * @param gridlines should the object have gridlines
+ */
 export function create(model: Model, texture: DataTexture, gridlines: boolean): Group {
     const group = new Group();
 
@@ -58,18 +95,15 @@ export function create(model: Model, texture: DataTexture, gridlines: boolean): 
         for (let i = 0; i < 6; i++) { // Map uvs and textures for each face
             const face = element.faces[DIRECTIONS[i]];
 
-            buffer.set([ //
-                face.uv[0] / 64, (64 - face.uv[1]) / 64, // x1, y1
-                face.uv[2] / 64, (64 - face.uv[1]) / 64, // x1, y2
-                face.uv[0] / 64, (64 - face.uv[3]) / 64, // x2, y1
-                face.uv[2] / 64, (64 - face.uv[3]) / 64, // x2, y2
+            // 0,0 1,0 1,1 0,1
+            buffer.set([
+                face.uv[0] / 16, (16 - face.uv[1]) / 16, // x1, y1
+                face.uv[2] / 16, (16 - face.uv[1]) / 16, // x1, y2
+                face.uv[0] / 16, (16 - face.uv[3]) / 16, // x2, y1
+                face.uv[2] / 16, (16 - face.uv[3]) / 16, // x2, y2
             ], i * 8);
         }
-
-        console.log(buffer);
-
-        // geometry.setAttribute("uv", buffer);
-
+        geometry.setAttribute("uv", buffer);
 
         const mesh = new Mesh(geometry, material);
         mesh.position.set(xyz[0], xyz[1], xyz[2]);
@@ -96,18 +130,19 @@ export function create(model: Model, texture: DataTexture, gridlines: boolean): 
         }
     }
 
+    group.applyMatrix4(new THREE.Matrix4().makeRotationY(Math.PI));
+
     // This is good me thinks...
     const box = new Box3().setFromObject(group);
     const center = box.getCenter(group.position);
     group.position.set(-center.x, -center.y, -center.z);
 
-    group.children.forEach((obj) => {
-        console.log(obj);
-    })
-
     return group;
 }
 
+/**
+ * Creates gridline objects with a given `width`, `height`, `depth`, and `layer`.
+ */
 function createGridlines(width: number, height: number, depth: number, layer: number): Group {
     const group = new Group();
 

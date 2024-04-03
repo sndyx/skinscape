@@ -1,0 +1,205 @@
+import {rgbaBlendNormal} from "./blending";
+import {updateSkins} from "../stores";
+import type {RgbaColor} from "colord";
+import type {Model} from "./model";
+
+/**
+ * Represents a textured model.
+ */
+export class Skin {
+    model: Model;
+    data: Uint8ClampedArray;
+
+    /**
+     * Creates a new `Skin` with the given `Model` and `data`.
+     *
+     * @param model model to use
+     * @param data clamped i8 array matching model dimensions
+     */
+    constructor(model: Model, data: Uint8ClampedArray) {
+        this.model = model;
+        this.data = data;
+    }
+}
+
+/**
+ * Represents a textured model for editing.
+ */
+export class MutableSkin extends Skin {
+
+    name: string;
+    layers: Array<Layer>;
+    tempLayer: TempLayer;
+
+    /**
+     * Creates a new `MutableSkin` with the given `Model`.
+     */
+    constructor(model: Model) {
+        super(model, new Uint8ClampedArray(model.texture_size[0] * model.texture_size[1] * 4))
+        this.name = "Untitled Skin";
+        this.layers = [new Layer(this, "default")];
+        this.tempLayer = new TempLayer(this);
+    }
+
+    static fromJSON(json: any): MutableSkin {
+        // @ts-ignore
+        const skin = new MutableSkin();
+        skin.layers = json.layers.map((layer: any) => Layer.fromJSON(layer, skin));
+        skin.name = json.name;
+
+        for (let pos = 0; pos < skin.data.length; pos += 4) {
+            skin.updatePixel(pos);
+        }
+
+        return skin;
+    }
+
+    toJSON(): any {
+        return {
+            name: this.name,
+            layers: this.layers,
+        }
+    }
+
+    /**
+     * Updates the pixel at the given texture position pos. The updated value
+     * will not be factored into the `Skin`'s texture until this function is
+     * called.
+     *
+     * @param pos offset in texture buffer
+     */
+    updatePixel(pos: number) {
+        let color = { r: 0, g: 0, b: 0, a: 0 };
+        for (let i = 0; i < this.layers.length + 1; i++) {
+            let layer: Layer;
+            if (i === this.layers.length) {
+                layer = this.tempLayer; // Use temp layer as last layer
+            } else {
+                layer = this.layers[i];
+            }
+            if (!layer.isActive) continue; // Skip hidden layers
+            const layerColor = layer.getPixelByPos(pos);
+            if (layerColor.a === 255) { // Alpha already transformed to 0-255 by layer
+                color = layerColor;
+            } else {
+                color = rgbaBlendNormal(color, layerColor);
+            }
+        }
+        this.data.set([color.r, color.g, color.b, color.a], pos);
+    }
+
+}
+
+/**
+ * A `MutableSkin` layer.
+ */
+export class Layer {
+
+    skin: MutableSkin;
+    data: Uint8ClampedArray;
+    name: string;
+    isActive: boolean;
+
+    constructor(skin: MutableSkin, name: string) {
+        this.skin = skin;
+        this.data = new Uint8ClampedArray(64 * 64 * 4);
+        this.name = name;
+        this.isActive = true;
+    }
+
+    static fromJSON(json: any, skin: MutableSkin) {
+        const layer = new Layer(skin, json.name);
+        layer.data.set(json.data);
+        layer.isActive = json.isActive;
+        return layer;
+    }
+
+    toJSON() {
+        return {
+            data: Array.from(this.data),
+            name: this.name,
+            isActive: this.isActive,
+        }
+    }
+
+    /**
+     * Gets the pixel at coords `(x, y)`.
+     */
+    getPixel(x: number, y: number) {
+        const pos = (x * 4) + ((y * 64 - 1) * 4);
+        return this.getPixelByPos(pos);
+    }
+
+    /**
+     * Gets the pixel at the given texture position `pos`.
+     *
+     * @param pos offset in texture buffer
+     */
+    getPixelByPos(pos: number) {
+        return {
+            r: this.data[pos], g: this.data[pos + 1],
+            b: this.data[pos + 2], a: this.data[pos + 3],
+        };
+    }
+
+    /**
+     * Sets the pixel at coords `(x, y)`.
+     *
+     * @param x
+     * @param y
+     * @param color color to set
+     * @param blend should color be blended (only affects colors with alpha)
+     * @param update should pixel be updated in the `MutableSkin`
+     */
+    setPixel(
+        x: number, y: number,
+        color: RgbaColor,
+        blend = true, update = true
+    ) {
+        let c = { r: color.r, g: color.g, b: color.b, a: Math.floor(color.a * 255) };
+        const pos = (x * 4) + ((y * 64 - 1) * 4);
+        if (blend) {
+            if (c.a !== 255) { // Mix colors if color is transparent
+                const current = this.getPixelByPos(pos);
+                c = rgbaBlendNormal(current, c);
+            }
+        }
+        this.data.set([c.r, c.g, c.b, c.a], pos);
+        this.skin.updatePixel(pos);
+        if (update) updateSkins();
+    }
+
+}
+
+/**
+ * A temporary `MutableSkin` layer.
+ */
+export class TempLayer extends Layer {
+
+    set: Set<Array<number>>;
+
+    constructor(skin: MutableSkin) {
+        super(skin, "temp");
+        this.set = new Set();
+    }
+
+    override setPixel(
+        x: number, y: number,
+        color: RgbaColor,
+        blend = true, update = false
+    ) {
+        this.set.add([x, y])
+        super.setPixel(x, y, color, blend, update);
+    }
+
+    /**
+     * Clears this layer.
+     */
+    clear() {
+        this.set.forEach((pos) => {
+            super.setPixel(pos[0], pos[1], {r: 0, g: 0, b: 0, a: 0}, false, false);
+        });
+        this.set.clear();
+    }
+
+}

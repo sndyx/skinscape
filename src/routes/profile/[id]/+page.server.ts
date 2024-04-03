@@ -1,5 +1,5 @@
 import { error } from "@sveltejs/kit";
-import { db } from "$lib/db.js";
+import { db } from "$lib/db";
 
 export async function load({ params }) {
     const id = params.id;

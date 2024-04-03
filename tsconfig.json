@@ -1,4 +1,5 @@
 {
+  "extends": "./.svelte-kit/tsconfig.json",
   "compilerOptions": {
     "resolveJsonModule": true,
     "lib": [
@@ -6,7 +7,7 @@
       "dom",
       "es5",
       "scripthost",
-      "es2015.collection"
+      "es2020"
     ]
   }
 }

@@ -1,12 +1,13 @@
-import { get, writable } from 'svelte/store';
+import {get, type Writable, writable} from 'svelte/store';
 import { persisted } from "svelte-persisted-store";
 import { colord } from "colord";
-import {Eraser, Eyedropper, Fill, Marquee, Pencil, Shape} from "./tools.js";
-import { Skin } from "./skin.js";
+import {Eraser, Eyedropper, Fill, Marquee, Pencil, Shape, Tool} from "./tools";
+import {MutableSkin} from "./util/skin";
+import {Models} from "./util/model";
 
 export const preferences = persisted("preferences", {
-    theme: 'aseprite',
-    language: 'auto',
+    theme: 'dark',
+    language: 'zh',
 });
 
 export const tools = {
@@ -28,11 +29,11 @@ export const rgba = persisted("rgba",
 );
 
 // This is terrible. Nobody should ever do this. This is awful. I despise this. Please don't do this.
-export const skins = persisted("skins",
-    [new Skin()], {
+export const skins: Writable<MutableSkin> = persisted("skins",
+    [new MutableSkin(Models.test)], {
         serializer: {
-            parse: (text) => JSON.parse(text).map((json) => Skin.fromJSON(json)),
-            stringify: (object) => JSON.stringify(object.map((skin) => skin.toJSON())),
+            parse: (text) => JSON.parse(text).map((json: any) => MutableSkin.fromJSON(json)),
+            stringify: (object) => JSON.stringify(object.map((skin: MutableSkin) => skin.toJSON())),
         }
     }
 );
@@ -42,7 +43,7 @@ export function updateSkins() {
     skins.set(get(skins));
 }
 
-export const tool = writable(tools.pencil);
+export const tool: Writable<Tool> = writable(tools.pencil);
 
 export const activeEditor = writable(0);
 

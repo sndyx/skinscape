@@ -1,11 +1,11 @@
-export function noSelect(node) {
+export function noSelect(node: HTMLDivElement) {
 
     function mousedown() {
         window.addEventListener('mouseup', disableNoSelect);
         window.addEventListener('selectstart', disableSelect);
     }
 
-    function disableSelect(event) {
+    function disableSelect(event: { preventDefault: () => void; }) {
         event.preventDefault();
     }
 

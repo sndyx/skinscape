@@ -1,32 +1,31 @@
-<script>
-    import ColorPicker from "../color/ColorPicker.svelte";
-    import Palette from "../color/Palette.svelte";
-    import { rgba, tool, activeEditor, tools, skins } from '../stores.js';
-    import { Scene } from "../scene.js";
+<script lang="ts">
+    import ColorPicker from "$lib/color/ColorPicker.svelte";
+    import Palette from "$lib/color/Palette.svelte";
+    import { rgba, tool, activeEditor, tools } from '$lib/stores';
     import { onMount } from "svelte";
     import { get } from "svelte/store";
-    import Layer from "./Layer.svelte";
-    import UPNG from "upng-js";
+    import * as UPNG from "upng-js";
+    import type {WebGLRenderer} from "three";
+    import type {MutableSkin} from "$lib/util/skin";
+    import {EditorScene} from "$lib/util/scene";
 
-    export let renderer;
+    export let renderer: WebGLRenderer;
+    export let skin: MutableSkin;
+    export let isFirst: boolean;
+    export let eid: number;
 
-    export let isFirst;
-    export let skin;
-    export let eid;
+    let scene: EditorScene;
+    let sceneElement: HTMLDivElement;
 
     let palette = new Set();
 
-    let sceneElement;
-    let scene;
-
-    let cursorElement;
+    let cursorElement: HTMLDivElement;
 
     const keybinds = new Map();
 
     function init() {
-        scene = new Scene(renderer, sceneElement, skin);
-        scene.setModel("alex");
-        setSkin("sourgummmybears");
+        scene = new EditorScene(renderer, sceneElement, skin)
+        setSkin("Mr_Beast");
 
         keybinds.set('o', () => {
             scene.toggleOverlay(!scene.overlay);
@@ -53,16 +52,16 @@
 
     onMount(init);
 
-    async function setSkin(name) {
+    async function setSkin(name: string) {
         let buffer = await (await fetch(`/api/skin/${name}`)).arrayBuffer();
-        scene.setTexture(new Uint8Array(UPNG.toRGBA8(UPNG.decode(buffer))[0]));
+        scene.setTexture(new Uint8ClampedArray(UPNG.toRGBA8(UPNG.decode(buffer))[0]));
     }
 
     export function render() {
         scene.render();
     }
 
-    function mousedown(event) {
+    function mousedown(event: MouseEvent) {
         activeEditor.set(eid);
 
         if (event.button === 0) {
@@ -89,7 +88,7 @@
 
     let mouseDown = false;
 
-    function mousemove(event) {
+    function mousemove(event: MouseEvent) {
         scene.tempLayer().clear();
 
         cursorElement.style.left = event.clientX - 12 + 'px';
@@ -117,7 +116,7 @@
         }
     }
 
-    function mouseup(event) {
+    function mouseup(event: MouseEvent) {
         scene.controls.enabled = true;
         if (event.button === 0) {
             mouseDown = false;
@@ -126,7 +125,7 @@
         }
     }
 
-    function keydown(event) {
+    function keydown(event: KeyboardEvent) {
         if (get(activeEditor) === eid) {
             keybinds.forEach((f, key) => {
                 if (key === event.key) {
@@ -161,30 +160,14 @@
     {/if}
 </div>
 <div class="center">
-    <!-- svelte-ignore a11y-no-static-element-interactions -->
-    <div
-        class="scene border"
-        bind:this={sceneElement}
-        on:mousedown={mousedown}
-        on:mousemove={mousemove}
-        on:mouseup={mouseup}
-        on:mouseover={mouseover}
-        on:mouseleave={mouseleave}
-    >
-        <!---
-        <div class="part-toggle">
-            <PartToggle bind:bodyToggles />
-        </div>
-        -->
-
-        <div class="layers">
-            {#if scene}
-                {#each $skins[eid].layers as layer}
-                    <Layer layer={layer} renderer={renderer}></Layer>
-                {/each}
-            {/if}
-        </div>
-    </div>
+    <div class="scene border"
+         bind:this={sceneElement}
+         on:mousedown={mousedown}
+         on:mousemove={mousemove}
+         on:mouseup={mouseup}
+         on:mouseover={mouseover}
+         on:mouseleave={mouseleave}
+    />
 </div>
 
 <style>

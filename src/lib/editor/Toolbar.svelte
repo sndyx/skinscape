@@ -1,6 +1,6 @@
 <script>
 import Button from "$lib/common/Button.svelte";
-import {tool, tools} from "../stores.js";
+import {tool, tools} from "../stores";
 import {get} from "svelte/store";
 </script>
 

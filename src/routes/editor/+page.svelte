@@ -5,10 +5,8 @@
     import Toolbar from "$lib/editor/Toolbar.svelte";
     import Header from "$lib/editor/Header.svelte";
     import StatusBar from "$lib/editor/StatusBar.svelte";
-    import ConfigBar from "$lib/editor/config/ConfigBar.svelte";
     import AuthOverlay from "$lib/common/AuthOverlay.svelte";
     import { skins } from "$lib/stores";
-    import {get} from "svelte/store";
 
     let canvas;
 
@@ -77,7 +75,6 @@
     <Header />
 
     <div class="center-panel">
-        <ConfigBar />
         <div class="workspace">
             <Toolbar />
             <div class="editors">
