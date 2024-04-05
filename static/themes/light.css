@@ -1,7 +1,7 @@
 :root {
     --main-color: #bababc;
     --secondary-color: #e4e5f1;
-    --inlay-color: #888888;
+    --inlay-color: #e4e5f1;
     --scene-color: var(--inlay-color);
     --error-color: #ff4444;
 
@@ -9,15 +9,15 @@
     --secondary-text: #4e4e4e;
     --link-text: #4393de;
 
-    --icon-color: var(--secondary-color);
+    --icon-color: #000000;
 
     --status-color: #4393de;
 
-    --button-dark: #515152;
-    --button-color: #8a8a8b;
-    --button-light: #ababab;
-    --button-hover: #ffffff;
-    --button-selected: #6e6e6e;
+    --button-color: var(--main-color);
+    --button-hover: var(--main-color);
+    --button-select: #9eb8ff;
+    --button-outline-hover: #ffffff;
+    --button-outline-select: #00258a;
 
     --border-dark: #000000;
     --border-color: var(--secondary-color);
@@ -39,4 +39,8 @@
 
 .menu:hover {
     background: #f1f8a9;
+}
+
+.button.active {
+    --icon-color: #ffffff;
 }

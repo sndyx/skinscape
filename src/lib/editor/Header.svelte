@@ -27,7 +27,6 @@ import { _ } from "svelte-i18n";
     </div>
     <div class="header-right">
         {#if $profile}
-            <div class="settings" style="mask-image: url('/icons/settings.svg')"></div>
             <div class="pfp"><img src={$profile.display_skin} width="28" height="28" alt="profile"></div>
         {:else}
             <div class="login border-small" on:mousedown={() => {showAuthOverlay.set(true)}}>

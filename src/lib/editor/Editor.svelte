@@ -8,6 +8,10 @@
     import type {WebGLRenderer} from "three";
     import type {MutableSkin} from "$lib/util/skin";
     import {EditorScene} from "$lib/util/scene";
+    import {Models} from "$lib/util/model";
+    import alex128 = Models.alex128;
+    import steve64 = Models.steve64;
+    import steve128 = Models.steve128;
 
     export let renderer: WebGLRenderer;
     export let skin: MutableSkin;
@@ -25,7 +29,6 @@
 
     function init() {
         scene = new EditorScene(renderer, sceneElement, skin)
-        setSkin("Mr_Beast");
 
         keybinds.set('o', () => {
             scene.toggleOverlay(!scene.overlay);
@@ -48,13 +51,26 @@
                 sceneElement.style.cursor = "url('/icons/eyedropper@2x.png') 0 23, auto";
             }
         });
+
+        setSkin("Mr_Beast").then(() => {
+            scene.setModel(steve128);
+            console.log(scene);
+        });
     }
 
     onMount(init);
 
     async function setSkin(name: string) {
         let buffer = await (await fetch(`/api/skin/${name}`)).arrayBuffer();
-        scene.setTexture(new Uint8ClampedArray(UPNG.toRGBA8(UPNG.decode(buffer))[0]));
+        const image = UPNG.decode(buffer);
+        const size = [image.width, image.height];
+        const data = UPNG.toRGBA8(image);
+        console.log(size);
+        const texture = {
+            size: size,
+            data: new Uint8ClampedArray(data[0]),
+        };
+        scene.setTexture(texture);
     }
 
     export function render() {
@@ -77,8 +93,8 @@
                 if (intersects.length > 0) {
                     mouseDown = true;
                     scene.controls.enabled = false;
-                    const x = Math.ceil(intersects[0].uv.x * 64); // Why ceil? IDK LOL
-                    const y = Math.floor((1 - intersects[0].uv.y) * 64); // Why +2? IDK LOL
+                    const x = Math.ceil(intersects[0].uv.x * skin.model.texture_size[0]); // Why ceil? IDK LOL
+                    const y = Math.floor((1 - intersects[0].uv.y) * skin.model.texture_size[1]); // Why +2? IDK LOL
                     let color = get(rgba);
                     get(tool).down(scene, x, y, color);
                 }
@@ -105,8 +121,8 @@
             true,
         );
         if (intersects.length > 0) {
-            const x = Math.ceil(intersects[0].uv.x * 64);
-            const y = Math.floor((1 - intersects[0].uv.y) * 64);
+            const x = Math.ceil(intersects[0].uv.x * skin.model.texture_size[0]);
+            const y = Math.floor((1 - intersects[0].uv.y) * skin.model.texture_size[1]);
             let color = get(rgba);
             if (mouseDown) {
                 get(tool).drag(scene, x, y, color);

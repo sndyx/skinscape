@@ -34,6 +34,6 @@ import {get} from "svelte/store";
     }
     .button-container {
         width: 100%;
-        aspect-ratio: 1/1.2;
+        aspect-ratio: 1/1;
     }
 </style>

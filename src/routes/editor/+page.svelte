@@ -122,7 +122,7 @@
         display: flex;
         flex-direction: row;
         gap: 12px;
-        padding: 0 12px 12px 12px;
+        padding: 12px 12px 12px 12px;
     }
 
     .editors {

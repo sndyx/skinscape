@@ -52,8 +52,7 @@
 
 .button {
     margin: 4px !important;
-    width: calc(100% - 8px) !important;
-    height: calc(100% - 8px) !important;
+    padding: 0 !important;
     box-shadow: 2px 0 0 0 #ffffff, -2px 0 0 0 #ffffff, 0 2px 0 0 #ffffff, 0 -2px 0 0 #ffffff, 0 0 0 2px #81919d, 0 0 0 4px #000000 !important;
     aspect-ratio: 1/1 !important;
 }

@@ -30,7 +30,7 @@ export const rgba = persisted("rgba",
 
 // This is terrible. Nobody should ever do this. This is awful. I despise this. Please don't do this.
 export const skins: Writable<MutableSkin> = persisted("skins",
-    [new MutableSkin(Models.test)], {
+    [new MutableSkin(Models.steve64)], {
         serializer: {
             parse: (text) => JSON.parse(text).map((json: any) => MutableSkin.fromJSON(json)),
             stringify: (object) => JSON.stringify(object.map((skin: MutableSkin) => skin.toJSON())),

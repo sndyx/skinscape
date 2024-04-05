@@ -8,8 +8,8 @@ import {
 // @ts-ignore
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 
-import {create, type Model, Models} from "./model";
-import type {Layer, MutableSkin, Skin, TempLayer} from "./skin";
+import {create, type Model} from "./model";
+import type {Layer, MutableSkin, Skin, TempLayer, Texture} from "./skin";
 
 const CAMERA_POSITION = new Vector3(0, 0, 30);
 const CONTROLS_TARGET = new Vector3(0, 0, 0);
@@ -24,7 +24,7 @@ export class Scene {
 
     readonly camera: PerspectiveCamera;
     readonly scene: TScene;
-    readonly texture: DataTexture;
+    texture: DataTexture;
     objects: Group;
     controls: OrbitControls;
 
@@ -51,7 +51,7 @@ export class Scene {
         this.controls.maxDistance = 200;
         this.controls.minDistance = 10;
 
-        this.texture = new DataTexture(this.skin.data, 64, 64);
+        this.texture = new DataTexture(this.skin.data, skin.model.texture_size[0], skin.model.texture_size[1]);
         this.texture.flipY = true;
 
         this.camera.add(new DirectionalLight(0xFFFFFF, 1.7));
@@ -59,7 +59,7 @@ export class Scene {
         this.scene.add(this.camera);
         this.scene.add(this.objects);
 
-        this.setModel(Models.test);
+        this.objects.add(create(this.skin.model, this.texture, true));
     }
 
     render() {
@@ -73,11 +73,6 @@ export class Scene {
         this.renderer.render(this.scene, this.camera);
 
         this.texture.needsUpdate = true;
-    }
-
-    protected setModel(model: Model) {
-        this.objects.clear();
-        this.objects.add(create(model, this.texture, false));
     }
 
 }
@@ -116,6 +111,8 @@ export class EditorScene extends Scene {
 
         this.toggleGridlines(false);
         this.toggleOverlay(false);
+
+        this.currentLayer = 0;
     }
 
     override render() {
@@ -131,11 +128,6 @@ export class EditorScene extends Scene {
         super.render();
 
         this.texture.needsUpdate = true;
-    }
-
-    protected override setModel(model: Model) {
-        this.objects.clear();
-        this.objects.add(create(model, this.texture, true));
     }
 
     resetCameraPosition() {
@@ -219,10 +211,24 @@ export class EditorScene extends Scene {
         }
     }
 
-    setTexture(data: Uint8ClampedArray) {
-        this.skin.data.set(data);
-        this.activeLayer().data = data;
+    setTexture(texture: Texture) {
+        this.skinMut.setTexture(texture);
         this.texture.needsUpdate = true;
+    }
+
+    setModel(model: Model) {
+        this.skinMut.setModel(model);
+
+        this.texture = new DataTexture(
+            this.skin.data,
+            this.skin.model.texture_size[0],
+            this.skin.model.texture_size[1],
+        );
+        this.texture.flipY = true;
+        this.texture.needsUpdate = true;
+
+        this.objects.clear();
+        this.objects.add(create(this.skin.model, this.texture, true));
     }
 
     activeLayer(): Layer {

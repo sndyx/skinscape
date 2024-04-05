@@ -3,6 +3,11 @@ import {updateSkins} from "../stores";
 import type {RgbaColor} from "colord";
 import type {Model} from "./model";
 
+export type Texture = {
+    size: number[];
+    data: Uint8ClampedArray;
+}
+
 /**
  * Represents a textured model.
  */
@@ -14,11 +19,65 @@ export class Skin {
      * Creates a new `Skin` with the given `Model` and `data`.
      *
      * @param model model to use
-     * @param data clamped i8 array matching model dimensions
+     * @param texture clamped i8 array matching model dimensions
      */
-    constructor(model: Model, data: Uint8ClampedArray) {
+    constructor(model: Model, texture: Texture) {
         this.model = model;
-        this.data = data;
+        this.data = Skin.possiblyResize(model, texture).data;
+    }
+
+    protected static possiblyResize(model: Model, texture: Texture): Texture {
+        let tex = texture;
+        if (texture.size[0] == 64 && texture.size[1] == 32 && model.texture_size !== texture.size) { // Probably old 64x32 texture
+            tex = this.resizeClamped(tex.data, [64, 64]);
+        }
+
+        if (model.texture_size !== texture.size) { // Texture sizes do not align
+            tex = this.resizeNearestNeighbor(tex.data, tex.size, model.texture_size);
+        }
+
+        return tex;
+    }
+
+    private static resizeClamped(texture: Uint8ClampedArray, newSize: number[]): Texture {
+        const length = newSize[0] * newSize[1];
+        const newTexture = new Uint8ClampedArray(length * 4);
+
+        for (let pos = 0; pos < Math.min(length, texture.length); pos++) {
+            newTexture[pos] = texture[pos];
+        }
+
+        return {
+            size: newSize,
+            data: newTexture,
+        };
+    }
+
+    private static resizeNearestNeighbor(texture: Uint8ClampedArray, oldSize: number[], newSize: number[]): Texture {
+        if (oldSize === newSize) return { size: newSize, data: texture };
+        const length = newSize[0] * newSize[1];
+        const newTexture = new Uint8ClampedArray(length * 4);
+        for (let pos = 0; pos < length; pos++) {
+            const x = pos % newSize[0];
+            const y = Math.floor(pos / newSize[1]);
+
+            const sampleX = Math.floor(x / newSize[0] * oldSize[0]);
+            const sampleY = Math.floor(y / newSize[1] * oldSize[1]);
+
+            if (pos < 10) console.log([x, y], [sampleX, sampleY]);
+
+            const samplePos = (sampleX * 4) + ((sampleY * oldSize[1]) * 4);
+
+            if (pos < 10) console.log(samplePos);
+
+            for (let i = 0; i < 4; i++) {
+                newTexture[pos * 4 + i] = texture[samplePos + i];
+            }
+        }
+        return {
+            size: newSize,
+            data: newTexture,
+        };
     }
 }
 
@@ -35,15 +94,20 @@ export class MutableSkin extends Skin {
      * Creates a new `MutableSkin` with the given `Model`.
      */
     constructor(model: Model) {
-        super(model, new Uint8ClampedArray(model.texture_size[0] * model.texture_size[1] * 4))
+        const texture = {
+            size: model.texture_size,
+            data: new Uint8ClampedArray(model.texture_size[0] * model.texture_size[1] * 4)
+        }
+        super(model, texture);
         this.name = "Untitled Skin";
         this.layers = [new Layer(this, "default")];
+        this.layers[0].data = this.data;
         this.tempLayer = new TempLayer(this);
     }
 
     static fromJSON(json: any): MutableSkin {
         // @ts-ignore
-        const skin = new MutableSkin();
+        const skin = new MutableSkin(json.model);
         skin.layers = json.layers.map((layer: any) => Layer.fromJSON(layer, skin));
         skin.name = json.name;
 
@@ -58,6 +122,33 @@ export class MutableSkin extends Skin {
         return {
             name: this.name,
             layers: this.layers,
+            model: this.model,
+        }
+    }
+
+    setTexture(texture: Texture) {
+        this.data.set(Skin.possiblyResize(this.model, texture).data); // Will keep shape
+        this.layers = [new Layer(this, "default")];
+        this.layers[0].data = this.data;
+    }
+
+    setModel(model: Model) {
+        const oldModel = this.model;
+        this.model = model;
+
+        // Update texture
+        for (const layer of this.layers) {
+            const texture = {
+                size: oldModel.texture_size,
+                data: layer.data,
+            }
+            layer.data = Skin.possiblyResize(model, texture).data;
+        }
+
+        // Model could change texture size, recreate data!
+        this.data = new Uint8ClampedArray(model.texture_size[0] * model.texture_size[1] * 4);
+        for (let pos = 0; pos < this.data.length; pos += 4) {
+            this.updatePixel(pos);
         }
     }
 
@@ -102,7 +193,7 @@ export class Layer {
 
     constructor(skin: MutableSkin, name: string) {
         this.skin = skin;
-        this.data = new Uint8ClampedArray(64 * 64 * 4);
+        this.data = new Uint8ClampedArray(skin.model.texture_size[0] * skin.model.texture_size[1] * 4);
         this.name = name;
         this.isActive = true;
     }
@@ -126,7 +217,7 @@ export class Layer {
      * Gets the pixel at coords `(x, y)`.
      */
     getPixel(x: number, y: number) {
-        const pos = (x * 4) + ((y * 64 - 1) * 4);
+        const pos = (x * 4) + ((y * this.skin.model.texture_size[1] - 1) * 4);
         return this.getPixelByPos(pos);
     }
 
@@ -157,7 +248,7 @@ export class Layer {
         blend = true, update = true
     ) {
         let c = { r: color.r, g: color.g, b: color.b, a: Math.floor(color.a * 255) };
-        const pos = (x * 4) + ((y * 64 - 1) * 4);
+        const pos = (x * 4) + ((y * this.skin.model.texture_size[1] - 1) * 4);
         if (blend) {
             if (c.a !== 255) { // Mix colors if color is transparent
                 const current = this.getPixelByPos(pos);

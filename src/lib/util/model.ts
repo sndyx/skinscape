@@ -16,14 +16,18 @@ import {LineMaterial} from "three/examples/jsm/lines/LineMaterial";
 // @ts-ignore
 import {LineSegments2} from "three/examples/jsm/lines/LineSegments2";
 
-import * as model_steve64 from "../../models/steve64_new.json";
-import * as model_alex64 from "../../models/alex64_new.json";
+import * as model_steve64 from "../../models/steve64.json";
+import * as model_steve128 from "../../models/steve128.json";
+import * as model_alex64 from "../../models/alex64.json";
+import * as model_alex128 from "../../models/alex128.json";
 import * as model_test from "../../models/test.json";
 
 export namespace Models {
 
     export const steve64: Model = model_steve64;
+    export const steve128: Model = model_steve128;
     export const alex64: Model = model_alex64;
+    export const alex128: Model = model_alex128;
     export const test: Model = model_test;
 
 }
@@ -122,7 +126,6 @@ export function create(model: Model, texture: DataTexture, gridlines: boolean): 
         group.add(mesh);
 
         if (gridlines) {
-            // Create normal gridlines on layer 2, overlay gridlines on layer 3
             const grid = createGridlines(whd[0], whd[1], whd[2], overlay ? 3 : 2);
             grid.position.set(xyz[0], xyz[1], xyz[2]);
             grid.scale.set(1.01, 1.01, 1.01);
@@ -165,7 +168,7 @@ function createGridlines(width: number, height: number, depth: number, layer: nu
         // Make vertices
         const halfWidth = face.width / 2;
         const halfHeight = face.height / 2;
-        for (let x = -halfWidth; x <= halfWidth; x++) {
+        for (let x = -halfWidth; x <= halfWidth; x += 1) {
             if (x === -halfWidth || x === halfWidth) {
                 outlineVtxBuf.push(x, -halfHeight, 0);
                 outlineVtxBuf.push(x, halfHeight, 0);
@@ -174,7 +177,7 @@ function createGridlines(width: number, height: number, depth: number, layer: nu
                 gridVtxBuf.push(x, halfHeight, 0);
             }
         }
-        for (let y = -halfHeight; y <= halfHeight; y++) {
+        for (let y = -halfHeight; y <= halfHeight; y += 1) {
             if (y === -halfHeight || y === halfHeight) {
                 outlineVtxBuf.push(-halfWidth, y, 0);
                 outlineVtxBuf.push(halfWidth, y, 0);

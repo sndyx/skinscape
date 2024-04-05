@@ -2,7 +2,7 @@
     // This whole component is straight dogshit 🔥🔥🔥
     // Perhaps this should be refactored later...
     // jk
-    import Button from "$lib/common/Button.svelte";
+    import Button from "$lib/common/Button2.svelte";
     import { showAuthOverlay, updateProfile } from "$lib/stores";
     import { _ } from "svelte-i18n";
 

@@ -11,10 +11,11 @@
 
     --icon-color: #cecece;
 
-    --button-color: #8a8a8b;
-    --button-light: #ababab;
-    --button-hover: #ffffff;
-    --button-selected: #6e6e6e;
+    --button-color: var(--main-color);
+    --button-hover: var(--main-color);
+    --button-select: #354063;
+    --button-outline-hover: #ffffff;
+    --button-outline-select: #466eeb;
 
     --border-dark: #000000;
     --border-color: #515152;
